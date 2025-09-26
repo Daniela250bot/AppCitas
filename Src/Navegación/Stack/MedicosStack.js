@@ -1,0 +1,61 @@
+import { createStackNavigator } from "@react-navigation/stack";
+import ListarMedicos from "../../../Screen/Medicos/ListarMedicos";
+import DetalleMedico from "../../../Screen/Medicos/DetalleMedico";
+import EditarMedico from "../../../Screen/Medicos/EditarMedico";
+import CrearMedico from "../../../Screen/Medicos/CrearMedico";
+
+const Stack = createStackNavigator();
+
+export default function MedicosStack() {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        name="ListarMedicos"
+        component={ListarMedicos}
+        options={{
+          title: "Gestión de Médicos",
+          headerStyle: {
+            backgroundColor: "#007AFF",
+          },
+          headerTintColor: "#fff",
+          headerTitleStyle: {
+            fontWeight: "bold",
+          },
+        }}
+      />
+      <Stack.Screen
+        name="DetalleMedico"
+        component={DetalleMedico}
+        options={{
+          title: "Detalle de Médico",
+          headerStyle: {
+            backgroundColor: "#007AFF",
+          },
+          headerTintColor: "#fff",
+        }}
+      />
+      <Stack.Screen
+        name="EditarMedico"
+        component={EditarMedico}
+        options={{
+          title: "Editar Médico",
+          headerStyle: {
+            backgroundColor: "#007AFF",
+          },
+          headerTintColor: "#fff",
+        }}
+      />
+      <Stack.Screen
+        name="CrearMedico"
+        component={CrearMedico}
+        options={{
+          title: "Nuevo Médico",
+          headerStyle: {
+            backgroundColor: "#007AFF",
+          },
+          headerTintColor: "#fff",
+        }}
+      />
+    </Stack.Navigator>
+  );
+}
