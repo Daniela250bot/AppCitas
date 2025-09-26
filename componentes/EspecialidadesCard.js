@@ -1,15 +1,13 @@
 import { View, Text, Pressable, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
-export default function PerfilesCard({ perfil, onEdit, onDelete, onPress }) {
-  const inicial = perfil.Nombre
-    ? perfil.Nombre.charAt(0).toUpperCase()
-    : "?";
+export default function EspecialidadesCard({ especialidad, onEdit, onDelete, onPress }) {
+  const inicial = especialidad.Nombre ? especialidad.Nombre.charAt(0).toUpperCase() : "?";
 
   return (
     <Pressable
       style={styles.card}
-      onPress={onPress} // 👉 al presionar la tarjeta abre DetallePerfil
+      onPress={onPress} // 👉 al presionar la tarjeta abre DetalleEspecialidad
     >
       {/* Avatar */}
       <View style={styles.avatar}>
@@ -18,18 +16,21 @@ export default function PerfilesCard({ perfil, onEdit, onDelete, onPress }) {
 
       {/* Info */}
       <View style={styles.info}>
-        <Text style={styles.nombre}>{perfil.Nombre}</Text>
+        <Text style={styles.nombre}>{especialidad.Nombre}</Text>
 
         <View style={styles.row}>
-          <Ionicons name="id-card-outline" size={16} color="#555" />
-          <Text style={styles.detalle}> ID: {perfil.idPerfil}</Text>
+          <Ionicons name="card-outline" size={16} color="#555" />
+          <Text style={styles.detalle}> {especialidad.Documento}</Text>
         </View>
 
         <View style={styles.row}>
-          <Ionicons name="person-outline" size={16} color="#555" />
-          <Text style={styles.detalle}>
-            Tipo: {perfil.Tipo || "Sin definir"}
-          </Text>
+          <Ionicons name="call-outline" size={16} color="#555" />
+          <Text style={styles.detalle}> {especialidad.Telefono}</Text>
+        </View>
+
+        <View style={styles.row}>
+          <Ionicons name="mail-outline" size={16} color="#555" />
+          <Text style={styles.detalle}> {especialidad.Email}</Text>
         </View>
       </View>
 

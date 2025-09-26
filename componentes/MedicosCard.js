@@ -1,15 +1,13 @@
 import { View, Text, Pressable, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
-export default function PerfilesCard({ perfil, onEdit, onDelete, onPress }) {
-  const inicial = perfil.Nombre
-    ? perfil.Nombre.charAt(0).toUpperCase()
-    : "?";
+export default function MedicosCard({ medico, onEdit, onDelete, onPress }) {
+  const inicial = medico.Nombre ? medico.Nombre.charAt(0).toUpperCase() : "?";
 
   return (
     <Pressable
       style={styles.card}
-      onPress={onPress} // 👉 al presionar la tarjeta abre DetallePerfil
+      onPress={onPress} // 👉 al presionar abre DetalleMedico
     >
       {/* Avatar */}
       <View style={styles.avatar}>
@@ -18,18 +16,28 @@ export default function PerfilesCard({ perfil, onEdit, onDelete, onPress }) {
 
       {/* Info */}
       <View style={styles.info}>
-        <Text style={styles.nombre}>{perfil.Nombre}</Text>
+        <Text style={styles.nombre}>
+          {medico.Nombre} {medico.Apellido}
+        </Text>
 
         <View style={styles.row}>
-          <Ionicons name="id-card-outline" size={16} color="#555" />
-          <Text style={styles.detalle}> ID: {perfil.idPerfil}</Text>
+          <Ionicons name="card-outline" size={16} color="#555" />
+          <Text style={styles.detalle}> {medico.Documento}</Text>
         </View>
 
         <View style={styles.row}>
-          <Ionicons name="person-outline" size={16} color="#555" />
-          <Text style={styles.detalle}>
-            Tipo: {perfil.Tipo || "Sin definir"}
-          </Text>
+          <Ionicons name="call-outline" size={16} color="#555" />
+          <Text style={styles.detalle}> {medico.Telefono}</Text>
+        </View>
+
+        <View style={styles.row}>
+          <Ionicons name="mail-outline" size={16} color="#555" />
+          <Text style={styles.detalle}> {medico.Email}</Text>
+        </View>
+
+        <View style={styles.row}>
+          <Ionicons name="medkit-outline" size={16} color="#555" />
+          <Text style={styles.detalle}> Especialidad: {medico.Especialidad}</Text>
         </View>
       </View>
 
