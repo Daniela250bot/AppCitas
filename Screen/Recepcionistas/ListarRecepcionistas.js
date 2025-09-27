@@ -1,5 +1,5 @@
 import { View, Text, FlatList, ActivityIndicator, Alert, TouchableOpacity, StyleSheet } from "react-native";
-import { listarRecepcionistas, eliminarRecepcionista } from "../../Src/Services/RecepcionistasService";
+import { listarRecepcionistas, eliminarRecepcionista } from "../../Src/Servicios/RecepcionistasService";
 import { useNavigation } from "@react-navigation/native";
 import RecepcionistasCard from "../../components/RecepcionistasCard";
 import { useEffect, useState } from "react";

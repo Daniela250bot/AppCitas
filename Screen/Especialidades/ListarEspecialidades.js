@@ -1,7 +1,7 @@
 import { View, Text, FlatList, ActivityIndicator, Alert, TouchableOpacity, StyleSheet } from "react-native";
-import { listarEspecialidades, eliminarEspecialidad } from "../../Src/Services/EspecialidadesService";
+import { listarEspecialidades, eliminarEspecialidad } from "../../Src/Servicios/EspecialidadesService";
 import { useNavigation } from "@react-navigation/native";
-import EspecialidadesCard from "../../components/EspecialidadesCard";
+import EspecialidadesCard from "../../componentes/EspecialidadesCard";
 import { useEffect, useState } from "react";
 
 export default function ListarEspecialidades() {

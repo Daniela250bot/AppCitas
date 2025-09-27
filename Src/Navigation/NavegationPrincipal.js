@@ -1,7 +1,7 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons, Feather, MaterialCommunityIcons } from "@expo/vector-icons";
 import InicioStack from "./Stack/InicioStack";
-import PerfilesStack from "./Stack/PerfilesStack";
+import PerfilesStack from "./Stack/PerfilStack";
 import ConfiguracionesStack from "./Stack/ConfiguracionStack";
 
 

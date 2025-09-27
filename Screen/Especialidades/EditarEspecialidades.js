@@ -1,19 +1,11 @@
 import React, { useState } from "react";
-import {
-  View,
-  TextInput,
-  TouchableOpacity,
-  Text,
-  StyleSheet,
-  ScrollView,
-  Alert,
-} from "react-native";
+import { View, TextInput, TouchableOpacity, Text, StyleSheet, ScrollView, Alert,} from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 import {
   crearEspecialidad,
   editarEspecialidad,
-} from "../../Src/Services/EspecialidadesService";
+} from "../../Src/Servicios/EspecialidadesService";
 
 export default function EditarEspecialidad() {
   const navigation = useNavigation();

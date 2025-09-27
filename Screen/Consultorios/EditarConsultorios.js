@@ -1,16 +1,8 @@
 import React, { useState } from "react";
-import {
-  View,
-  TextInput,
-  TouchableOpacity,
-  Text,
-  StyleSheet,
-  ScrollView,
-  Alert,
-} from "react-native";
+import { View, TextInput, TouchableOpacity, Text, StyleSheet, ScrollView, Alert,} from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
-import { crearConsultorio, editarConsultorio } from "../../Src/Services/ConsultoriosService";
+import { crearConsultorio, editarConsultorio } from "../../Src/Servicios/ConsultoriosService";
 
 export default function EditarConsultorio() {
   const navigation = useNavigation();

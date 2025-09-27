@@ -6,7 +6,7 @@ import ConsultoriosStack from "./ConsultoriosStack";
 import EspecialidadesStack from "./EspecialidadesStack";
 import MedicosStack from "./MedicosStack";
 import PacientesStack from "./PacientesStack";
-import PerfilesStack from "./PerfilesStack"
+import PerfilesStack from "./PerfilStack"
 import RecepcionistasStack from "./RecepcionistasStack"
 
 const Stack = createNativeStackNavigator();

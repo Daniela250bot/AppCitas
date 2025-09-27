@@ -1,5 +1,5 @@
 import { View, Text, FlatList, ActivityIndicator, Alert, TouchableOpacity, StyleSheet} from "react-native";
-import { listarPacientes, eliminarPaciente } from "../../Src/Services/PacienteService";
+import { listarPacientes, eliminarPaciente } from "../../Src/Servicios/PacienteService";
 import { useNavigation } from "@react-navigation/native";
 import PacienteCard from "../../components/PacientesCard";
 import { useEffect, useState } from "react";

@@ -1,7 +1,7 @@
 import { View, Text, FlatList, ActivityIndicator, Alert, TouchableOpacity, StyleSheet } from "react-native";
-import { listarConsultorios, eliminarConsultorio } from "../../Src/Services/ConsultoriosService";
+import { listarConsultorios, eliminarConsultorio } from "../../Src/Servicios/ConsultoriosService";
 import { useNavigation } from "@react-navigation/native";
-import ConsultoriosCard from "../../components/ConsultoriosCard";
+import ConsultoriosCard from "../../componentes/ConsultorioCard";
 import { useEffect, useState } from "react";
 
 export default function ListarConsultorios() {

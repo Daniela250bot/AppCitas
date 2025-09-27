@@ -1,7 +1,7 @@
 import { View, Text, FlatList, ActivityIndicator, Alert, TouchableOpacity, StyleSheet } from "react-native";
-import { listarMedicos, eliminarMedico } from "../../Src/Services/MedicosService";
+import { listarMedicos, eliminarMedico } from "../../Src/Servicios/MedicosService";
 import { useNavigation } from "@react-navigation/native";
-import MedicosCard from "../../components/MedicosCard";
+import MedicosCard from "../../componentes/MedicosCard";
 import { useEffect, useState } from "react";
 
 export default function ListarMedicos() {

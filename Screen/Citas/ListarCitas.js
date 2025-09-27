@@ -1,7 +1,7 @@
 import { View, Text, FlatList, ActivityIndicator, Alert, TouchableOpacity, StyleSheet } from "react-native";
-import { listarCitas, eliminarCita } from "../../Src/Services/CitasService";
+import { listarCitas, eliminarCita } from "../../Src/Servicios/CitasService";
 import { useNavigation } from "@react-navigation/native";
-import CitasCard from "../../components/CitasCard";
+import CitasCard from "../../componentes/CitasCard";
 import { useEffect, useState } from "react";
 
 export default function ListarCitas() {
