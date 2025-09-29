@@ -1,8 +1,7 @@
 import { createStackNavigator } from "@react-navigation/stack";
 import ListarEspecialidades from "../../../Screen/Especialidades/ListarEspecialidades";
-import DetalleEspecialidad from "../../../Screen/Especialidades/DetalleEspecialidad";
-import EditarEspecialidad from "../../../Screen/Especialidades/EditarEspecialidad";
-import CrearEspecialidad from "../../../Screen/Especialidades/CrearEspecialidad";
+import DetalleEspecialidad from "../../../Screen/Especialidades/DetalleEspecialidades";
+import EditarEspecialidad from "../../../Screen/Especialidades/EditarEspecialidades";
 
 const Stack = createStackNavigator();
 

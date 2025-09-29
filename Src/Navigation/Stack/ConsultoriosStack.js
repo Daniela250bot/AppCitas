@@ -1,8 +1,7 @@
 import { createStackNavigator } from "@react-navigation/stack";
-import ListarConsultorios from "../../../Screen/Consultorios/ListarConsultorios";
-import DetalleConsultorio from "../../../Screen/Consultorios/DetalleConsultorio";
-import EditarConsultorio from "../../../Screen/Consultorios/EditarConsultorio";
-import CrearConsultorio from "../../../Screen/Consultorios/CrearConsultorio";
+import ListarConsultorios from "../../../Screen/Consultorios/ListarConsutlorios";
+import DetalleConsultorio from "../../../Screen/Consultorios/DetalleConsultorios";
+import EditarConsultorio from "../../../Screen/Consultorios/EditarConsultorios";
 
 const Stack = createStackNavigator();
 

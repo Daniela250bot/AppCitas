@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import {View,TextInput,TouchableOpacity, Text, StyleSheet, ScrollView,KeyboardAvoidingView, Platform, Alert,} from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
-import { crearPaciente, editarPaciente } from "../../Src/Services/PacienteService";
+import { crearPaciente, editarPaciente } from "../../Src/Servicios/PacienteService";
 
 export default function EditarPaciente() {
   const navegation = useNavigation();

@@ -1,16 +1,8 @@
 import React, { useState } from "react";
-import {
-  View,
-  TextInput,
-  TouchableOpacity,
-  Text,
-  StyleSheet,
-  ScrollView,
-  Alert,
-} from "react-native";
+import { View, TextInput, TouchableOpacity, Text, StyleSheet, ScrollView, Alert,} from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
-import { crearMedico, editarMedico } from "../../Src/Services/MedicosService";
+import { crearMedico, editarMedico } from "../../Src/Servicios/MedicosService";
 
 export default function EditarMedico() {
   const navigation = useNavigation();

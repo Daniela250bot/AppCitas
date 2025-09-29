@@ -14,11 +14,17 @@ export default function Registro({ navigation }) {
   const [rh, setRh] = useState("");
   const [nacionalidad, setNacionalidad] = useState("");
   const [password, setPassword] = useState("");
-  const [roles, setRol] = useState("");
+  const [role, setRol] = useState("");
 
   const [loading, setLoading] = useState(false);
 
   const handleRegister = async () => {
+    // Validación básica
+    if (!name || !email || !password) {
+      Alert.alert("⚠️ Error", "Nombre, email y contraseña son obligatorios");
+      return;
+    }
+
     setLoading(true);
     const userData = {
       name,
@@ -31,7 +37,7 @@ export default function Registro({ navigation }) {
       rh,
       nacionalidad,
       password,
-      roles,
+      role: role || "paciente", // Valor por defecto
     };
 
     try {
@@ -55,19 +61,23 @@ export default function Registro({ navigation }) {
     <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.titulo}>📝 Registro de Usuario</Text>
 
-      <TextInput style={styles.input} placeholder="Nombre" value={name} onChangeText={setName} />
+      <TextInput style={styles.input} placeholder="Nombre *" value={name} onChangeText={setName} />
       <TextInput style={styles.input} placeholder="Apellido" value={apellido} onChangeText={setApellido} />
       <TextInput style={styles.input} placeholder="Documento" value={documento} onChangeText={setDocumento} />
       <TextInput style={styles.input} placeholder="Teléfono" value={telefono} onChangeText={setTelefono} keyboardType="phone-pad" />
-      <TextInput style={styles.input} placeholder="Correo" value={email} onChangeText={setEmail} keyboardType="email-address" autoCapitalize="none" />
+      <TextInput style={styles.input} placeholder="Correo *" value={email} onChangeText={setEmail} keyboardType="email-address" autoCapitalize="none" />
       <TextInput style={styles.input} placeholder="Fecha de nacimiento (YYYY-MM-DD)" value={fechaNacimiento} onChangeText={setFechaNacimiento} />
       <TextInput style={styles.input} placeholder="Género" value={genero} onChangeText={setGenero} />
       <TextInput style={styles.input} placeholder="RH" value={rh} onChangeText={setRh} />
       <TextInput style={styles.input} placeholder="Nacionalidad" value={nacionalidad} onChangeText={setNacionalidad} />
-      <TextInput style={styles.input} placeholder="Contraseña" secureTextEntry value={password} onChangeText={setPassword} />
-      <TextInput style={styles.input} placeholder="Rol (ej. paciente, medico)" value={roles} onChangeText={setRol} />
+      <TextInput style={styles.input} placeholder="Contraseña *" secureTextEntry value={password} onChangeText={setPassword} />
+      <TextInput style={styles.input}  placeholder="Rol (ej. paciente, medico)" value={role} />
 
-      <BottonComponent title={loading ? "⏳ Registrando..." : "✅ Registrarse"} onPress={handleRegister} disabled={loading} />
+      <BottonComponent 
+        title={loading ? "⏳ Registrando..." : "✅ Registrarse"} 
+        onPress={handleRegister} 
+        disabled={loading} 
+      />
 
       <BottonComponent
         title="🔑 ¿Ya tienes cuenta? Inicia sesión"

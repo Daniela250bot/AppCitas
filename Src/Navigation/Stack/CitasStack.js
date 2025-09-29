@@ -2,7 +2,6 @@ import { createStackNavigator } from "@react-navigation/stack";
 import ListarCitas from "../../../Screen/Citas/ListarCitas";
 import DetalleCita from "../../../Screen/Citas/DetalleCitas";
 import EditarCita from "../../../Screen/Citas/EditarCitas";
-import CrearCita from "../../../Screen/Citas/CearCitas";
 
 const Stack = createStackNavigator()
 

@@ -1,11 +1,8 @@
 import { View, Text, FlatList, ActivityIndicator, Alert, TouchableOpacity, StyleSheet} from "react-native";
 import { listarPacientes, eliminarPaciente } from "../../Src/Servicios/PacienteService";
 import { useNavigation } from "@react-navigation/native";
-import PacienteCard from "../../components/PacientesCard";
+import PacienteCard from "../../componentes/PacientesCard";
 import { useEffect, useState } from "react";
-
-
-
 
 export default function ListarPacientes (){
     const [pacientes, setPacientes] = useState([]);

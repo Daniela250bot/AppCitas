@@ -94,4 +94,6 @@ const styles = StyleSheet.create({
   },
   value: {
     fontSize: 16,
-    color: "#11182
+    color: "#11182",
+  }
+});

@@ -1,19 +1,8 @@
 import React, { useState } from "react";
-import {
-  View,
-  TextInput,
-  TouchableOpacity,
-  Text,
-  StyleSheet,
-  ScrollView,
-  Alert,
-} from "react-native";
+import { View, TextInput, TouchableOpacity, Text, StyleSheet, ScrollView, Alert,} from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
-import {
-  crearRecepcionista,
-  editarRecepcionista,
-} from "../../Src/Services/RecepcionistaService";
+import { crearRecepcionista, editarRecepcionista,} from "../../Src/Servicios/RecepcionistasService";
 
 export default function EditarRecepcionista() {
   const navigation = useNavigation();

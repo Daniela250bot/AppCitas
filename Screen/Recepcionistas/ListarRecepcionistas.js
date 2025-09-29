@@ -1,8 +1,9 @@
 import { View, Text, FlatList, ActivityIndicator, Alert, TouchableOpacity, StyleSheet } from "react-native";
 import { listarRecepcionistas, eliminarRecepcionista } from "../../Src/Servicios/RecepcionistasService";
 import { useNavigation } from "@react-navigation/native";
-import RecepcionistasCard from "../../components/RecepcionistasCard";
+import RecepcionistasCard from "../../componentes/RecepcionistasCard"; 
 import { useEffect, useState } from "react";
+
 
 export default function ListarRecepcionistas() {
   const [recepcionistas, setRecepcionistas] = useState([]);
