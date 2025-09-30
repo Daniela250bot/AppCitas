@@ -2,9 +2,11 @@ import { View, Text, Pressable, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
 export default function RecepcionistasCard({ recepcionista, onEdit, onDelete, onPress }) {
-  const inicial = recepcionista.Nombre
-    ? recepcionista.Nombre.charAt(0).toUpperCase()
-    : "?";
+   if (!recepcionista) return null;
+
+   const inicial = recepcionista.Nombre
+     ? recepcionista.Nombre.charAt(0).toUpperCase()
+     : "?";
 
   return (
     <Pressable
@@ -19,22 +21,22 @@ export default function RecepcionistasCard({ recepcionista, onEdit, onDelete, on
       {/* Info */}
       <View style={styles.info}>
         <Text style={styles.nombre}>
-          {recepcionista.Nombre} {recepcionista.Apellido}
+          {recepcionista?.Nombre ?? "Sin nombre"} {recepcionista?.Apellido ?? ""}
         </Text>
 
         <View style={styles.row}>
           <Ionicons name="card-outline" size={16} color="#555" />
-          <Text style={styles.detalle}> {recepcionista.Documento}</Text>
+          <Text style={styles.detalle}> {recepcionista?.Turno ?? "N/A"}</Text>
         </View>
 
         <View style={styles.row}>
           <Ionicons name="call-outline" size={16} color="#555" />
-          <Text style={styles.detalle}> {recepcionista.Telefono}</Text>
+          <Text style={styles.detalle}> {recepcionista?.Telefono ?? "N/A"}</Text>
         </View>
 
         <View style={styles.row}>
           <Ionicons name="mail-outline" size={16} color="#555" />
-          <Text style={styles.detalle}> {recepcionista.Email}</Text>
+          <Text style={styles.detalle}> {recepcionista?.Email ?? "N/A"}</Text>
         </View>
       </View>
 

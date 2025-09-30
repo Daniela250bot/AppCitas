@@ -2,12 +2,14 @@ import { View, Text, Pressable, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
 export default function PacienteCard({ paciente, onEdit, onDelete, onPress }) {
-  const inicial = paciente.Nombre ? paciente.Nombre.charAt(0).toUpperCase() : "?";
+   if (!paciente) return null;
+
+   const inicial = paciente.Nombre ? paciente.Nombre.charAt(0).toUpperCase() : "?";
 
   return (
     <Pressable
       style={styles.card}
-      onPress={onPress} // 👉 al presionar la tarjeta abre DetallePaciente
+      onPress={onPress} 
     >
       {/* Avatar */}
       <View style={styles.avatar}>
@@ -17,22 +19,22 @@ export default function PacienteCard({ paciente, onEdit, onDelete, onPress }) {
       {/* Info */}
       <View style={styles.info}>
         <Text style={styles.nombre}>
-          {paciente.Nombre} {paciente.Apellido}
+          {paciente?.Nombre ?? "Sin nombre"} {paciente?.Apellido ?? ""}
         </Text>
 
         <View style={styles.row}>
           <Ionicons name="card-outline" size={16} color="#555" />
-          <Text style={styles.detalle}> {paciente.Documento}</Text>
+          <Text style={styles.detalle}> {paciente?.Documento ?? "N/A"}</Text>
         </View>
 
         <View style={styles.row}>
           <Ionicons name="call-outline" size={16} color="#555" />
-          <Text style={styles.detalle}> {paciente.Telefono}</Text>
+          <Text style={styles.detalle}> {paciente?.Telefono ?? "N/A"}</Text>
         </View>
 
         <View style={styles.row}>
           <Ionicons name="mail-outline" size={16} color="#555" />
-          <Text style={styles.detalle}> {paciente.Email}</Text>
+          <Text style={styles.detalle}> {paciente?.Email ?? "N/A"}</Text>
         </View>
       </View>
 

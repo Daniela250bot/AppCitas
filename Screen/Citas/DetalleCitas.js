@@ -24,31 +24,31 @@ export default function DetalleCita() {
       {/* Mostrar información */}
       <View style={styles.card}>
         <Text style={styles.label}>📅 Fecha:</Text>
-        <Text style={styles.value}>{cita.Fecha}</Text>
+        <Text style={styles.value}>{cita?.Fecha ?? "N/A"}</Text>
 
         <Text style={styles.label}>⏰ Hora:</Text>
-        <Text style={styles.value}>{cita.Hora}</Text>
+        <Text style={styles.value}>{cita?.Hora ?? "N/A"}</Text>
 
         <Text style={styles.label}>📝 Motivo:</Text>
-        <Text style={styles.value}>{cita.Motivo}</Text>
+        <Text style={styles.value}>{cita?.Motivo ?? "N/A"}</Text>
 
         <Text style={styles.label}>📌 Estado:</Text>
-        <Text style={styles.value}>{cita.Estado}</Text>
+        <Text style={styles.value}>{cita?.Estado ?? "N/A"}</Text>
 
         <Text style={styles.label}>👤 ID Paciente:</Text>
-        <Text style={styles.value}>{cita.Id_paciente}</Text>
+        <Text style={styles.value}>{cita?.Id_paciente ?? "N/A"}</Text>
 
         <Text style={styles.label}>🩺 ID Médico:</Text>
-        <Text style={styles.value}>{cita.Id_medico}</Text>
+        <Text style={styles.value}>{cita?.Id_medico ?? "N/A"}</Text>
 
         <Text style={styles.label}>🏥 ID Consultorio:</Text>
-        <Text style={styles.value}>{cita.Id_consultorio}</Text>
+        <Text style={styles.value}>{cita?.Id_consultorio ?? "N/A"}</Text>
       </View>
 
       {/* Botones de acción */}
       <TouchableOpacity
         style={styles.button}
-        onPress={() => navigation.navigate("EditarCitaMedica", { cita })}
+        onPress={() => navigation.navigate("EditarCitas", { cita })}
       >
         <Ionicons name="create-outline" size={22} color="#fff" />
         <Text style={styles.buttonText}>Editar Cita</Text>

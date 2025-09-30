@@ -14,9 +14,9 @@ export default function ListarMedicos() {
     try {
       const result = await listarMedicos();
       if (result.success) {
-        setMedicos(result.data);
+        setMedicos(result.data || []);
       } else {
-        Alert.alert("Error", result.message || "No se pudieron cargar los médicos");
+       Alert.alert("Error", JSON.stringify(result.message) || "No se pudo guardar el médico");  
       }
     } catch (error) {
       Alert.alert("Error", "No se pudieron cargar los médicos");
@@ -31,11 +31,11 @@ export default function ListarMedicos() {
   }, [navigation]);
 
   const handleEditar = (medico) => {
-    navigation.navigate("EditarMedico", { medico });
+    navigation.navigate("EditarMedicos", { medico });
   };
 
   const handleCrear = () => {
-    navigation.navigate("CrearMedico");
+    navigation.navigate("EditarMedicos");
   };
 
   const handleEliminar = (id) => {

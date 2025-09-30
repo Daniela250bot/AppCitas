@@ -34,7 +34,7 @@ export default function MedicosStack() {
         }}
       />
       <Stack.Screen
-        name="EditarMedico"
+        name="EditarMedicos"
         component={EditarMedico}
         options={{
           title: "Editar Médico",
@@ -44,17 +44,7 @@ export default function MedicosStack() {
           headerTintColor: "#fff",
         }}
       />
-      <Stack.Screen
-        name="CrearMedico"
-        component={CrearMedico}
-        options={{
-          title: "Nuevo Médico",
-          headerStyle: {
-            backgroundColor: "#007AFF",
-          },
-          headerTintColor: "#fff",
-        }}
-      />
+     
     </Stack.Navigator>
   );
 }

@@ -2,7 +2,9 @@ import { View, Text, Pressable, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
 export default function ConsultorioCard({ consultorio, onEdit, onDelete, onPress }) {
-  const inicial = consultorio.Nombre ? consultorio.Nombre.charAt(0).toUpperCase() : "?";
+   if (!consultorio) return null;
+
+   const inicial = consultorio.Nombre ? consultorio.Nombre.charAt(0).toUpperCase() : "?";
 
   return (
     <Pressable
@@ -16,21 +18,21 @@ export default function ConsultorioCard({ consultorio, onEdit, onDelete, onPress
 
       {/* Info */}
       <View style={styles.info}>
-        <Text style={styles.nombre}>{consultorio.Nombre}</Text>
+        <Text style={styles.nombre}>{consultorio?.Nombre ?? "Sin nombre"}</Text>
 
         <View style={styles.row}>
           <Ionicons name="location-outline" size={16} color="#555" />
-          <Text style={styles.detalle}> {consultorio.Direccion}</Text>
+          <Text style={styles.detalle}> {consultorio?.Direccion ?? "N/A"}</Text>
         </View>
 
         <View style={styles.row}>
           <Ionicons name="business-outline" size={16} color="#555" />
-          <Text style={styles.detalle}> {consultorio.Ciudad}</Text>
+          <Text style={styles.detalle}> {consultorio?.Ciudad ?? "N/A"}</Text>
         </View>
 
         <View style={styles.row}>
           <Ionicons name="call-outline" size={16} color="#555" />
-          <Text style={styles.detalle}> {consultorio.Telefono}</Text>
+          <Text style={styles.detalle}> {consultorio?.Telefono ?? "N/A"}</Text>
         </View>
       </View>
 

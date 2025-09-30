@@ -12,40 +12,41 @@ export default function EditarMedico() {
 
   const [Nombre, setNombre] = useState(medico ? medico.Nombre : "");
   const [Apellido, setApellido] = useState(medico ? medico.Apellido : "");
-  const [EspecialidadId, setEspecialidadId] = useState(
-    medico ? medico.EspecialidadId.toString() : ""
-  );
+  const [Documento, setDocumento] = useState(medico ? medico.Documento : "");
+  const [idEspecialidad, setidEspecialidad] = useState( medico ? String(medico.idEspecialidad) : "");
   const [Telefono, setTelefono] = useState(medico ? medico.Telefono : "");
   const [Email, setEmail] = useState(medico ? medico.Email : "");
+  const [Password, setPassword] = useState("");
+  const [idConsultorio, setidConsultorio] = useState(medico ? String(medico.idConsultorio) : "");
   const [loading, setLoading] = useState(false);
 
   const esEdicion = !!medico;
 
   const handleGuardar = async () => {
-    if (!Nombre || !Apellido || !EspecialidadId || !Telefono || !Email) {
+    if (!Nombre || !Apellido || !idEspecialidad || !Telefono || !Email || !idConsultorio || !Documento || (!esEdicion && !Password)) {
       Alert.alert("Error", "Por favor, completa todos los campos.");
       return;
     }
 
     setLoading(true);
     try {
+      let data = {
+        Nombre,
+        Apellido,
+        Documento,
+        idEspecialidad,
+        Telefono,
+        Email,
+        idConsultorio,
+      };
+      if (Password) {
+        data.Password = Password;
+      }
       let result;
       if (esEdicion) {
-        result = await editarMedico(medico.id, {
-          Nombre,
-          Apellido,
-          EspecialidadId,
-          Telefono,
-          Email,
-        });
+        result = await editarMedico(medico.id, data);
       } else {
-        result = await crearMedico({
-          Nombre,
-          Apellido,
-          EspecialidadId,
-          Telefono,
-          Email,
-        });
+        result = await crearMedico(data);
       }
 
       if (result.success) {
@@ -55,10 +56,7 @@ export default function EditarMedico() {
         );
         navigation.goBack();
       } else {
-        Alert.alert(
-          "Error",
-          JSON.stringify(result.message) || "No se pudo guardar el médico"
-        );
+             Alert.alert("Error", JSON.stringify(result.message) || "No se pudo guardar el médico");  
       }
     } catch (error) {
       Alert.alert("Error", "No se pudo guardar el médico");
@@ -86,11 +84,17 @@ export default function EditarMedico() {
           value={Apellido}
           onChangeText={setApellido}
         />
+         <TextInput
+          style={styles.input}
+          placeholder="Documento"
+          value={Documento}
+          onChangeText={setDocumento}
+         />
         <TextInput
           style={styles.input}
           placeholder="ID Especialidad"
-          value={EspecialidadId}
-          onChangeText={setEspecialidadId}
+          value={idEspecialidad}
+          onChangeText={setidEspecialidad}
           keyboardType="numeric"
         />
         <TextInput
@@ -106,6 +110,19 @@ export default function EditarMedico() {
           value={Email}
           onChangeText={setEmail}
           keyboardType="email-address"
+        />
+         <TextInput
+          style={styles.input}
+          placeholder={esEdicion ? "Nueva Password (opcional)" : "Password"}
+          value={Password}
+          onChangeText={setPassword}
+          secureTextEntry
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="idConsultorio"
+          value={idConsultorio}
+          onChangeText={setidConsultorio}
         />
 
         <TouchableOpacity style={styles.button} onPress={handleGuardar} disabled={loading}>

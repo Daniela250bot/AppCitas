@@ -9,24 +9,24 @@ export default function PerfilesStack() {
     <Stack.Navigator
       screenOptions={{
         headerStyle: {
-          backgroundColor: "#007AFF", // Azul iOS
-          shadowColor: "transparent", // quita sombra en iOS
-          elevation: 0, // quita sombra en Android
+          backgroundColor: "#007AFF", 
+          shadowColor: "transparent", 
+          elevation: 0,
         },
-        headerTintColor: "#fff", // Color de texto y botones
+        headerTintColor: "#fff", 
         headerTitleStyle: {
           fontWeight: "bold",
           fontSize: 20,
-          letterSpacing: 1, // espaciado entre letras
+          letterSpacing: 1,
         },
-        headerTitleAlign: "center", // título centrado
+        headerTitleAlign: "center", 
       }}
     >
       <Stack.Screen
-        name="Perfil"
+        name="MiPerfil"
         component={Perfil}
         options={{
-          title: "👤 Mi Perfil", // puedes poner un emoji o icono
+          title: "👤 Mi Perfil", 
         }}
       />
     </Stack.Navigator>

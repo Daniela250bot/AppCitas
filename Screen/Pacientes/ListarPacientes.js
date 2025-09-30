@@ -1,7 +1,7 @@
 import { View, Text, FlatList, ActivityIndicator, Alert, TouchableOpacity, StyleSheet} from "react-native";
 import { listarPacientes, eliminarPaciente } from "../../Src/Servicios/PacienteService";
 import { useNavigation } from "@react-navigation/native";
-import PacienteCard from "../../componentes/PacientesCard";
+import PacientesCard from "../../componentes/PacientesCard";
 import { useEffect, useState } from "react";
 
 export default function ListarPacientes (){
@@ -15,7 +15,7 @@ export default function ListarPacientes (){
       try {
         const result = await listarPacientes();
         if (result.success) {
-          setPacientes(result.data);
+          setPacientes(result.data || []);
         }else{
           Alert.alert("Error ", result.message || "NO se pudieron cargar los pacientes");
         }
@@ -54,7 +54,7 @@ export default function ListarPacientes (){
 
                   handlePacientes();
                 } else {
-                   Alert.alert("Error ", result.message || "No se pudo eliminar el paciente");  
+               Alert.alert("Error", JSON.stringify(result.message));
                 }                 
               } catch (error) {
                 Alert.alert("Error ", "No se pudo eliminar el paciente"); 
@@ -81,7 +81,7 @@ export default function ListarPacientes (){
           data={pacientes}
           keyExtractor={(item) => item.id.toString()}
           renderItem={({item}) => (
-            <PacienteCard
+            <PacientesCard
               paciente={item}
               onEdit={() => handleEditar(item)}
               onDelete={() => handleEliminar(item.id)}

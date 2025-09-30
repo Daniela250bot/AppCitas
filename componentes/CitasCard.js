@@ -2,9 +2,11 @@ import { View, Text, Pressable, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
 export default function CitasCard({ cita, onEdit, onDelete, onPress }) {
-  const inicial = cita?.Paciente?.Nombre
-    ? cita.Paciente.Nombre.charAt(0).toUpperCase()
-    : "?";
+   if (!cita) return null;
+
+   const inicial = cita?.Paciente?.Nombre
+     ? cita.Paciente.Nombre.charAt(0).toUpperCase()
+     : "?";
 
   return (
     <Pressable
@@ -19,30 +21,37 @@ export default function CitasCard({ cita, onEdit, onDelete, onPress }) {
       {/* Info */}
       <View style={styles.info}>
         <Text style={styles.nombre}>
-          {cita?.Paciente?.Nombre} {cita?.Paciente?.Apellido}
-        </Text>
+           {cita?.idPaciente?.Nombre ?? "Sin nombre"} {cita?.Estado ?? ""}
+         </Text>
 
-        <View style={styles.row}>
-          <Ionicons name="medkit-outline" size={16} color="#555" />
-          <Text style={styles.detalle}>
-            {cita?.Medico?.Nombre} {cita?.Medico?.Apellido}
-          </Text>
-        </View>
+         <View style={styles.row}>
+           <Ionicons name="medkit-outline" size={16} color="#555" />
+           <Text style={styles.detalle}> id Medico : {cita?.idMedico ?? "N/A"}
+           </Text>
+         </View>
 
-        <View style={styles.row}>
-          <Ionicons name="calendar-outline" size={16} color="#555" />
-          <Text style={styles.detalle}> {cita.Fecha}</Text>
-        </View>
+          <View style={styles.row}>
+           <Ionicons name="medkit-outline" size={16} color="#555" />
+           <Text style={styles.detalle}> id Pacientes : {cita?.idPaciente ?? "N/A"}
+           </Text>
+         </View>
 
-        <View style={styles.row}>
-          <Ionicons name="time-outline" size={16} color="#555" />
-          <Text style={styles.detalle}> {cita.Hora}</Text>
-        </View>
+          <View style={styles.row}>
+           <Ionicons name="medkit-outline" size={16} color="#555" />
+           <Text style={styles.detalle}> id Recepcionista : {cita?.idRecepcionista ?? "N/A"}
+           </Text>
+         </View>
 
-        <View style={styles.row}>
-          <Ionicons name="checkmark-circle-outline" size={16} color="#555" />
-          <Text style={styles.detalle}> {cita.Estado}</Text>
-        </View>
+         <View style={styles.row}>
+           <Ionicons name="calendar-outline" size={16} color="#555" />
+           <Text style={styles.detalle}> {cita?.Fecha_cita ?? "N/A"}</Text>
+         </View>
+
+         <View style={styles.row}>
+           <Ionicons name="time-outline" size={16} color="#555" />
+           <Text style={styles.detalle}> {cita?.Hora ?? "N/A"}</Text>
+         </View>
+
       </View>
 
       {/* Botones Editar / Eliminar */}

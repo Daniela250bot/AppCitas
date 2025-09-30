@@ -29,8 +29,8 @@ export default function DetalleRecepcionista() {
         <Text style={styles.label}>👤 Apellido:</Text>
         <Text style={styles.value}>{recepcionista.Apellido}</Text>
 
-        <Text style={styles.label}>🆔 Documento:</Text>
-        <Text style={styles.value}>{recepcionista.Documento}</Text>
+        <Text style={styles.label}>🆔 Turno:</Text>
+        <Text style={styles.value}>{recepcionista.Turno}</Text>
 
         <Text style={styles.label}>📞 Teléfono:</Text>
         <Text style={styles.value}>{recepcionista.Telefono}</Text>

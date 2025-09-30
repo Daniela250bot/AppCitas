@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, Alert, StyleSheet, ActivityIndicator } from "react-native";
+import { View, Text, Alert, StyleSheet, ActivityIndicator, TouchableOpacity, Image } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import BottonComponent from "../../componentes/BottoComponent";
 import api from "../../Src/Servicios/Conexion";
+import * as ImagePicker from 'expo-image-picker';
 
 export default function Perfil() {
     const [usuario, setUsuario] = useState(null);
     const [cargando, setCargando] = useState(true);
+    const [imageUri, setImageUri] = useState(null);
 
     useEffect(() => {
         const cargarPerfil = async () => {
@@ -75,23 +77,55 @@ export default function Perfil() {
         cargarPerfil();
     }, []);
 
+    useEffect(() => {
+        (async () => {
+            const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+            if (status !== 'granted') {
+                Alert.alert('Permiso denegado', 'Se necesita permiso para acceder a la galería');
+            }
+        })();
+    }, []);
+
+    const pickImage = async () => {
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            allowsEditing: true,
+            aspect: [4, 3],
+            quality: 1,
+        });
+        if (!result.canceled) {
+            setImageUri(result.assets[0].uri);
+        }
+    };
+
     return (
-        <View style={styles.containerPerfil}>
-            {/* Contenido del perfil */}
+        <View style={styles.container}>
             {usuario ? (
                 <>
                     <Text style={styles.title}>Perfil de usuario</Text>
-                    <View style={styles.containerPerfil}>
+
+                    {/* Imagen de perfil o ícono por defecto */}
+                    {imageUri ? (
+                        <Image source={{ uri: imageUri }} style={styles.profileImage} />
+                    ) : (
+                        <View style={styles.defaultProfile}>
+                            <Text style={styles.defaultIcon}>👤</Text>
+                        </View>
+                    )}
+
+                    <TouchableOpacity style={styles.button} onPress={pickImage}>
+                        <Text style={styles.buttonText}>Seleccionar Imagen</Text>
+                    </TouchableOpacity>
+
+                    {/* Tarjeta con datos */}
+                    <View style={styles.card}>
                         <Text style={styles.label}>Nombre: {usuario.user.name || "No disponible"}</Text>
                         <Text style={styles.label}>Correo: {usuario.user.email || "No disponible"}</Text>
                     </View>
                 </>
             ) : (
                 <View style={styles.container}>
-                    <Text style={styles.containerPerfil}></Text>
-                    <View style={styles.containerPerfil}>
-                        <Text style={styles.errorText}></Text>
-                    </View>
+                    <Text style={styles.errorText}>No se encontró información del usuario</Text>
                 </View>
             )}
 
@@ -111,22 +145,39 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
-    },
-    containerPerfil: {
-        padding: 16,
+        backgroundColor: "#F5F9FF",
+        padding: 20,
     },
     title: {
-        fontSize: 20,
+        fontSize: 26,
         fontWeight: "bold",
-        marginBottom: 10,
+        marginBottom: 20,
+        color: "#0A74DA",
+        textAlign: "center",
+    },
+    card: {
+        width: "90%",
+        backgroundColor: "#fff",
+        borderRadius: 12,
+        padding: 20,
+        marginTop: 15,
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 3 },
+        shadowOpacity: 0.15,
+        shadowRadius: 5,
+        elevation: 4,
+        alignItems: "center",
     },
     label: {
-        fontSize: 16,
-        marginBottom: 5,
+        fontSize: 18,
+        marginBottom: 8,
+        color: "#333",
+        textAlign: "center",
     },
     errorText: {
         color: "red",
         fontSize: 14,
+        marginTop: 10,
     },
     overlay: {
         position: "absolute",
@@ -134,7 +185,7 @@ const styles = StyleSheet.create({
         left: 0,
         right: 0,
         bottom: 0,
-        backgroundColor: "rgba(0,0,0,0.5)", // fondo negro semitransparente
+        backgroundColor: "rgba(0,0,0,0.5)",
         justifyContent: "center",
         alignItems: "center",
     },
@@ -142,5 +193,46 @@ const styles = StyleSheet.create({
         marginTop: 10,
         fontSize: 16,
         color: "#fff",
+    },
+    profileImage: {
+        width: 120,
+        height: 120,
+        borderRadius: 60,
+        marginBottom: 15,
+        borderWidth: 3,
+        borderColor: "#0A74DA",
+    },
+    defaultProfile: {
+        width: 120,
+        height: 120,
+        borderRadius: 60,
+        backgroundColor: "#E0E0E0",
+        justifyContent: "center",
+        alignItems: "center",
+        marginBottom: 15,
+        borderWidth: 3,
+        borderColor: "#0A74DA",
+    },
+    defaultIcon: {
+        fontSize: 50,
+        color: "#666",
+    },
+    button: {
+        backgroundColor: '#0A74DA',
+        paddingVertical: 12,
+        paddingHorizontal: 20,
+        borderRadius: 8,
+        marginBottom: 20,
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.2,
+        shadowRadius: 4,
+        elevation: 3,
+    },
+    buttonText: {
+        color: '#fff',
+        textAlign: 'center',
+        fontSize: 16,
+        fontWeight: "bold",
     },
 });

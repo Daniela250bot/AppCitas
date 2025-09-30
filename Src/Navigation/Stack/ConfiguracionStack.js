@@ -8,7 +8,7 @@ const Stack = createNativeStackNavigator() ;
         return (
             <Stack.Navigator>
                 <Stack.Screen
-                name="ConfiguraciónPantalla"
+                name="Configuracion"
                 component={Configuracion}
                 options={{ headerShown: false }}
                 />

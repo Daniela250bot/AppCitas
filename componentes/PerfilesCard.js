@@ -2,9 +2,11 @@ import { View, Text, Pressable, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
 export default function PerfilesCard({ perfil, onEdit, onDelete, onPress }) {
-  const inicial = perfil.Nombre
-    ? perfil.Nombre.charAt(0).toUpperCase()
-    : "?";
+   if (!perfil) return null;
+
+   const inicial = perfil.Nombre
+     ? perfil.Nombre.charAt(0).toUpperCase()
+     : "?";
 
   return (
     <Pressable

@@ -2,7 +2,9 @@ import { View, Text, Pressable, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
 export default function MedicosCard({ medico, onEdit, onDelete, onPress }) {
-  const inicial = medico.Nombre ? medico.Nombre.charAt(0).toUpperCase() : "?";
+   if (!medico) return null;
+
+   const inicial = medico.Nombre ? medico.Nombre.charAt(0).toUpperCase() : "?";
 
   return (
     <Pressable
@@ -17,27 +19,33 @@ export default function MedicosCard({ medico, onEdit, onDelete, onPress }) {
       {/* Info */}
       <View style={styles.info}>
         <Text style={styles.nombre}>
-          {medico.Nombre} {medico.Apellido}
+          {medico?.Nombre ?? "Sin nombre"} {medico?.Apellido ?? ""}
         </Text>
 
         <View style={styles.row}>
           <Ionicons name="card-outline" size={16} color="#555" />
-          <Text style={styles.detalle}> {medico.Documento}</Text>
+          <Text style={styles.detalle}> {medico?.Documento ?? "N/A"}</Text>
         </View>
 
         <View style={styles.row}>
           <Ionicons name="call-outline" size={16} color="#555" />
-          <Text style={styles.detalle}> {medico.Telefono}</Text>
+          <Text style={styles.detalle}> {medico?.Telefono ?? "N/A"}</Text>
         </View>
 
         <View style={styles.row}>
           <Ionicons name="mail-outline" size={16} color="#555" />
-          <Text style={styles.detalle}> {medico.Email}</Text>
+          <Text style={styles.detalle}> {medico?.Email ?? "N/A"}</Text>
         </View>
 
         <View style={styles.row}>
           <Ionicons name="medkit-outline" size={16} color="#555" />
-          <Text style={styles.detalle}> Especialidad: {medico.Especialidad}</Text>
+          <Text style={styles.detalle}> Especialidad: {medico?.idEspecialidad ?? "N/A"}</Text>
+        </View>
+
+
+        <View style={styles.row}>
+          <Ionicons name="medkit-outline" size={16} color="#555" />
+          <Text style={styles.detalle}> Consultorio: {medico?.idConsultorio ?? "N/A"}</Text>
         </View>
       </View>
 

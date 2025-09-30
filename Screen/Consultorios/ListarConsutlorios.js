@@ -1,7 +1,7 @@
 import { View, Text, FlatList, ActivityIndicator, Alert, TouchableOpacity, StyleSheet } from "react-native";
 import { listarConsultorios, eliminarConsultorio } from "../../Src/Servicios/ConsultoriosService";
 import { useNavigation } from "@react-navigation/native";
-import ConsultoriosCard from "../../componentes/ConsultorioCard";
+import ConsultorioCard from "../../componentes/ConsultorioCard";
 import { useEffect, useState } from "react";
 
 export default function ListarConsultorios() {
@@ -14,7 +14,7 @@ export default function ListarConsultorios() {
     try {
       const result = await listarConsultorios();
       if (result.success) {
-        setConsultorios(result.data);
+        setConsultorios(result.data || []);
       } else {
         Alert.alert("Error", result.message || "No se pudieron cargar los consultorios");
       }
@@ -35,7 +35,7 @@ export default function ListarConsultorios() {
   };
 
   const handleCrear = () => {
-    navigation.navigate("CrearConsultorio");
+    navigation.navigate("EditarConsultorio");
   };
 
   const handleEliminar = (id) => {
@@ -53,7 +53,7 @@ export default function ListarConsultorios() {
               if (result.success) {
                 handleConsultorios();
               } else {
-                Alert.alert("Error", result.message || "No se pudo eliminar el consultorio");
+        Alert.alert("Error", JSON.stringify(result.message) || "No se pudo guardar el consultorio");
               }
             } catch (error) {
               Alert.alert("Error", "No se pudo eliminar el consultorio");
@@ -78,7 +78,7 @@ export default function ListarConsultorios() {
         data={consultorios}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
-          <ConsultoriosCard
+          <ConsultorioCard
             consultorio={item}
             onEdit={() => handleEditar(item)}
             onDelete={() => handleEliminar(item.id)}

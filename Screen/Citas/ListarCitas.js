@@ -14,7 +14,7 @@ export default function ListarCitas() {
     try {
       const result = await listarCitas();
       if (result.success) {
-        setCitas(result.data);
+        setCitas(result.data || []);
       } else {
         Alert.alert("Error", result.message || "No se pudieron cargar las citas");
       }
@@ -31,11 +31,11 @@ export default function ListarCitas() {
   }, [navigation]);
 
   const handleEditar = (cita) => {
-    navigation.navigate("EditarCita", { cita });
+    navigation.navigate("EditarCitas", { cita });
   };
 
   const handleCrear = () => {
-    navigation.navigate("CrearCita");
+    navigation.navigate("EditarCitas");
   };
 
   const handleEliminar = (id) => {
@@ -53,7 +53,7 @@ export default function ListarCitas() {
               if (result.success) {
                 handleCitas();
               } else {
-                Alert.alert("Error", result.message || "No se pudo eliminar la cita");
+               Alert.alert("Error", JSON.stringify(result.message));
               }
             } catch (error) {
               Alert.alert("Error", "No se pudo eliminar la cita");

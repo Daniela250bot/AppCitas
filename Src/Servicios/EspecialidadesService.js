@@ -15,7 +15,7 @@ export const listarEspecialidades = async () => {
 
 export const eliminarEspecialidad = async (id) => {
   try {
-    await api.delete(`/eliminarEspecialidades/${id}`);
+    await api.delete(`/eliminarEspecialidad/${id}`);
     return { success: true };
   } catch (error) {
     console.error("Error al eliminar la especialidad:", error.response ? error.response.data : error.message);
@@ -28,7 +28,7 @@ export const eliminarEspecialidad = async (id) => {
 
 export const crearEspecialidad = async (data) => {
   try {
-    const response = await api.post("/crearEspecialidades", data);
+    const response = await api.post("/crearEspecialidad", data);
     return { success: true, data: response.data };
   } catch (error) {
     console.error("Error al crear la especialidad:", error.response ? error.response.data : error.message);
@@ -41,7 +41,7 @@ export const crearEspecialidad = async (data) => {
 
 export const editarEspecialidad = async (id, data) => {
   try {
-    const response = await api.put(`/actualizarEspecialidades/${id}`, data);
+    const response = await api.put(`/actualizarEspecialidad/${id}`, data);
     return { success: true, data: response.data };
   } catch (error) {
     console.error("Error al editar la especialidad:", error.response ? error.response.data : error.message);

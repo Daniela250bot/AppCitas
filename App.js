@@ -1,14 +1,14 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
-import AppNavigation from './Src/Navigation/AppNavigation';
-import FlashMessage from "react-native-flash-message";
+import React from "react";
+import { UserProvider } from "./Src/Contexts/UserContext";
+import { ThemeProvider } from "./Src/Contexts/ThemeContext";
+import AppNavegacion from "./Src/Navigation/AppNavigation";
 
 export default function App() {
   return (
-   <>
-      <StatusBar style="auto" />
-        <FlashMessage position="top" />
-      <AppNavigation/>
-    </>
+    <ThemeProvider>
+      <UserProvider>
+        <AppNavegacion />
+      </UserProvider>
+    </ThemeProvider>
   );
 }

@@ -15,7 +15,6 @@ export default function Registro({ navigation }) {
   const [nacionalidad, setNacionalidad] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRol] = useState("");
-
   const [loading, setLoading] = useState(false);
 
   const handleRegister = async () => {
@@ -37,7 +36,7 @@ export default function Registro({ navigation }) {
       rh,
       nacionalidad,
       password,
-      role: role || "paciente", // Valor por defecto
+      role
     };
 
     try {
@@ -47,8 +46,12 @@ export default function Registro({ navigation }) {
           { text: "OK", onPress: () => navigation.navigate("Login") },
         ]);
       } else {
-        Alert.alert("⚠️ Error", result.message || "Error en el registro");
-      }
+ Alert.alert(
+            "Error de Login",
+            typeof result.message === "string"
+              ? result.message
+              : result.message?.message || JSON.stringify(result.message) || "Ocurrió un error al iniciar sesión"
+          );            }
     } catch (error) {
       console.error("Error en registro:", error);
       Alert.alert("❌ Error", "No se pudo registrar el usuario");
@@ -71,7 +74,7 @@ export default function Registro({ navigation }) {
       <TextInput style={styles.input} placeholder="RH" value={rh} onChangeText={setRh} />
       <TextInput style={styles.input} placeholder="Nacionalidad" value={nacionalidad} onChangeText={setNacionalidad} />
       <TextInput style={styles.input} placeholder="Contraseña *" secureTextEntry value={password} onChangeText={setPassword} />
-      <TextInput style={styles.input}  placeholder="Rol (ej. paciente, medico)" value={role} />
+      <TextInput style={styles.input} placeholder="Rol (ej. paciente, medico)" value={role} onChangeText={setRol}/>
 
       <BottonComponent 
         title={loading ? "⏳ Registrando..." : "✅ Registrarse"} 

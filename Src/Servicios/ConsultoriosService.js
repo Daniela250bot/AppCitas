@@ -15,7 +15,7 @@ export const listarConsultorios = async () => {
 
 export const eliminarConsultorio = async (id) => {
   try {
-    await api.delete(`/eliminarConsultorios/${id}`);
+    await api.delete(`/eliminarConsultorio/${id}`);
     return { success: true };
   } catch (error) {
     console.error("Error al eliminar el consultorio:", error.response ? error.response.data : error.message);
@@ -28,7 +28,7 @@ export const eliminarConsultorio = async (id) => {
 
 export const crearConsultorio = async (data) => {
   try {
-    const response = await api.post("/crearConsultorios", data);
+    const response = await api.post("/crearConsultorio", data);
     return { success: true, data: response.data };
   } catch (error) {
     console.error("Error al crear el consultorio:", error.response ? error.response.data : error.message);
@@ -41,7 +41,7 @@ export const crearConsultorio = async (data) => {
 
 export const editarConsultorio = async (id, data) => {
   try {
-    const response = await api.put(`/actualizarConsultorios/${id}`, data);
+    const response = await api.put(`/actualizarConsultorio/${id}`, data);
     return { success: true, data: response.data };
   } catch (error) {
     console.error("Error al editar el consultorio:", error.response ? error.response.data : error.message);

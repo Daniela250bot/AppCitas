@@ -44,17 +44,7 @@ export default function EspecialidadesStack() {
           headerTintColor: "#fff",
         }}
       />
-      <Stack.Screen
-        name="CrearEspecialidad"
-        component={CrearEspecialidad}
-        options={{
-          title: "Nueva Especialidad",
-          headerStyle: {
-            backgroundColor: "#007AFF",
-          },
-          headerTintColor: "#fff",
-        }}
-      />
+
     </Stack.Navigator>
   );
 }

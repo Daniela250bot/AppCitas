@@ -14,7 +14,7 @@ export default function ListarEspecialidades() {
     try {
       const result = await listarEspecialidades();
       if (result.success) {
-        setEspecialidades(result.data);
+        setEspecialidades(result.data || []);
       } else {
         Alert.alert("Error", result.message || "No se pudieron cargar las especialidades");
       }
@@ -35,7 +35,7 @@ export default function ListarEspecialidades() {
   };
 
   const handleCrear = () => {
-    navigation.navigate("CrearEspecialidad");
+    navigation.navigate("EditarEspecialidad");
   };
 
   const handleEliminar = (id) => {
@@ -53,7 +53,7 @@ export default function ListarEspecialidades() {
               if (result.success) {
                 handleEspecialidades();
               } else {
-                Alert.alert("Error", result.message || "No se pudo eliminar la especialidad");
+               Alert.alert("Error", JSON.stringify(result.message) || "No se pudo guardar el consultorio");
               }
             } catch (error) {
               Alert.alert("Error", "No se pudo eliminar la especialidad");

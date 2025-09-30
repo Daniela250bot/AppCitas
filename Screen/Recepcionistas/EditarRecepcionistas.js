@@ -14,33 +14,35 @@ export default function EditarRecepcionista() {
   const [Apellido, setApellido] = useState(recepcionista ? recepcionista.Apellido : "");
   const [Telefono, setTelefono] = useState(recepcionista ? recepcionista.Telefono : "");
   const [Email, setEmail] = useState(recepcionista ? recepcionista.Email : "");
+  const [Password, setPassword] = useState("");
+  const [Turno, setTurno] = useState(recepcionista ? recepcionista.Turno : "");
   const [loading, setLoading] = useState(false);
 
   const esEdicion = !!recepcionista;
 
   const handleGuardar = async () => {
-    if (!Nombre || !Apellido || !Telefono || !Email) {
+    if (!Nombre || !Apellido || !Turno || !Telefono || !Email || (!esEdicion && !Password)) {
       Alert.alert("Error", "Por favor, completa todos los campos.");
       return;
     }
 
     setLoading(true);
     try {
+      let data = {
+        Nombre,
+        Apellido,
+        Telefono,
+        Email,
+        Turno,
+      };
+      if (Password) {
+        data.Password = Password;
+      }
       let result;
       if (esEdicion) {
-        result = await editarRecepcionista(recepcionista.id, {
-          Nombre,
-          Apellido,
-          Telefono,
-          Email,
-        });
+        result = await editarRecepcionista(recepcionista.id, data);
       } else {
-        result = await crearRecepcionista({
-          Nombre,
-          Apellido,
-          Telefono,
-          Email,
-        });
+        result = await crearRecepcionista(data);
       }
 
       if (result.success) {
@@ -96,6 +98,19 @@ export default function EditarRecepcionista() {
           value={Email}
           onChangeText={setEmail}
           keyboardType="email-address"
+        />
+         <TextInput
+          style={styles.input}
+          placeholder={esEdicion ? "Nueva Contraseña (opcional)" : "Contraseña"}
+          value={Password}
+          onChangeText={setPassword}
+          secureTextEntry
+        />
+          <TextInput
+          style={styles.input}
+          placeholder="Turno"
+          value={Turno}
+          onChangeText={setTurno}
         />
 
         <TouchableOpacity

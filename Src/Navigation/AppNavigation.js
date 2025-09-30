@@ -1,57 +1,50 @@
 import { NavigationContainer } from "@react-navigation/native";
 import AuthNavegacion from "./AuthNavegation";
-import NavegationPrincipal from "./NavegationPrincipal";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import React, { useState, useEffect, useRef, use } from "react";
-import { AppState } from "react-native";
+import NavegacionPrincipal from "./NavegationPrincipal";
+import React from "react";
+import { View, Text, ActivityIndicator, StyleSheet } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import { useUser } from "../Contexts/UserContext";
 
-export default function AppNavegacion(){
-    const [isloading, setIsLoading] = useState(true);
-    const [userToken, setUserToken] = useState(null);
-    const appState = useRef(AppState.currentState);
+export default function AppNavegacion() {
+  const { user, loading } = useUser(); 
 
-    const loadToken = async () => {
-        try {
-            const token = await AsyncStorage.getItem("userToken");
-            setUserToken(token);
-        }catch (error) {
-            console.error("Error al cargar el token desde AsyncStorage: ", error);
-        } finally {
-            setIsLoading(false);
-        }
-    };
+  if (loading) {
+    return (
+      <View style={styles.splashContainer}>
+        <Ionicons name="medkit-outline" size={64} color="#FFFFFF" />
+        <Text style={styles.title}>Clínica Salud+</Text>
+        <ActivityIndicator size="large" color="#FFFFFF" style={{ marginTop: 20 }} />
+        <Text style={styles.subtitle}>Cargando tu sesión...</Text>
+      </View>
+    );
+  }
 
-    //se ejecuta cuando el componente se monta
-    useEffect(() =>{
-        loadToken();
-    },[])
+  console.log("AppNavigation: user is:", user);
 
-    //Se ejecuta cuando hay cambio de estado en la appp (iniciativa(activa/Backround)
-    useEffect(() =>{
-        const handleAppStateChange = (nextAppState)=>{
-            if(appState.current.match(/inactive|background/) && nextAppState === "active"){
-                console.log("La aplicacion ha vuelto al primer plano, verificando el token...");
-                loadToken();
-            }
-            appState.current = nextAppState;
-        };
-        const subscription = AppState.addEventListener("change", handleAppStateChange);
-        return () => subscription.remove();
-    },[]);
-
-    //Se ejecuta en un intervalo de 2 segundos
-   useEffect(() => {
-    const interval = setInterval(() =>{
-        if (AppState.currentState === "active"){
-            loadToken();
-        }
-    }, 2000);
-    return ()=> clearInterval(interval);
-    },[]);
-
-        return(
-            <NavigationContainer>
-                {userToken ? <NavegationPrincipal/> : <AuthNavegacion/>}
-            </NavigationContainer>
-        );
+  return (
+    <NavigationContainer>
+      {user ? <NavegacionPrincipal /> : <AuthNavegacion />}
+    </NavigationContainer>
+  );
 }
+
+const styles = StyleSheet.create({
+  splashContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#2563EB", 
+  },
+  title: {
+    fontSize: 28,
+    fontWeight: "bold",
+    color: "#FFFFFF",
+    marginTop: 10,
+  },
+  subtitle: {
+    fontSize: 16,
+    color: "#E5E7EB",
+    marginTop: 10,
+  },
+});

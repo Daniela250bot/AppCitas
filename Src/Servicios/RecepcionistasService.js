@@ -16,7 +16,7 @@ export const listarRecepcionistas = async () => {
 
 export const eliminarRecepcionista = async (id) => {
   try {
-    await api.delete(`/eliminarRecepcionistas/${id}`);
+    await api.delete(`/eliminarRecepcionista/${id}`);
     return { success: true };
   } catch (error) {
     console.error("Error al eliminar recepcionista:", error.response ? error.response.data : error.message);
@@ -29,7 +29,7 @@ export const eliminarRecepcionista = async (id) => {
 
 export const crearRecepcionista = async (data) => {
   try {
-    const response = await api.post("/crearRecepcionistas", data);
+    const response = await api.post("/crearRecepcionista", data);
     return { success: true, data: response.data };
   } catch (error) {
     console.error("Error al crear recepcionista:", error.response ? error.response.data : error.message);
@@ -42,7 +42,7 @@ export const crearRecepcionista = async (data) => {
 
 export const editarRecepcionista = async (id, data) => {
   try {
-    const response = await api.put(`/actualizarRecepcionistas/${id}`, data);
+    const response = await api.put(`/actualizarRecepcionista/${id}`, data);
     return { success: true, data: response.data };
   } catch (error) {
     console.error("Error al editar recepcionista:", error.response ? error.response.data : error.message);

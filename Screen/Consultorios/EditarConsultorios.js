@@ -11,13 +11,15 @@ export default function EditarConsultorio() {
   const consultorio = route.params?.consultorio;
 
   const [Nombre, setNombre] = useState(consultorio ? consultorio.Nombre : "");
-  const [Ubicacion, setUbicacion] = useState(consultorio ? consultorio.Ubicacion : "");
+  const [Direccion, setDireccion] = useState(consultorio ? consultorio.Direccion : "");
+  const [Ciudad, setCiudad] = useState(consultorio ? consultorio.Ciudad : "");
+  const [Telefono, setTelefono] = useState(consultorio ? consultorio.Telefono : "");
   const [loading, setLoading] = useState(false);
-
+  
   const esEdicion = !!consultorio; // true si estamos editando
 
   const handleGuardar = async () => {
-    if (!Nombre || !Ubicacion) {
+    if (!Nombre || !Telefono || !Ciudad || !Direccion ) {
       Alert.alert("Error", "Por favor, completa todos los campos.");
       return;
     }
@@ -27,12 +29,16 @@ export default function EditarConsultorio() {
       if (esEdicion) {
         result = await editarConsultorio(consultorio.id, {
           Nombre,
-          Ubicacion,
+          Direccion,
+          Ciudad,
+          Telefono,
         });
       } else {
         result = await crearConsultorio({
           Nombre,
-          Ubicacion,
+          Direccion,
+          Ciudad,
+          Telefono,
         });
       }
       if (result.success) {
@@ -46,6 +52,7 @@ export default function EditarConsultorio() {
     } finally {
       setLoading(false);
     }
+
   };
 
   return (
@@ -63,11 +70,23 @@ export default function EditarConsultorio() {
         />
         <TextInput
           style={styles.input}
-          placeholder="Ubicación"
-          value={Ubicacion}
-          onChangeText={setUbicacion}
+          placeholder="Direccion"
+          value={Direccion}
+          onChangeText={setDireccion}
         />
-
+        <TextInput
+          style={styles.input}
+          placeholder="Ciudad"
+          value={Ciudad}
+          onChangeText={setCiudad}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Telefono"
+          value={Telefono}
+          onChangeText={setTelefono}
+        />
+        
         <TouchableOpacity style={styles.button} onPress={handleGuardar} disabled={loading}>
           <Ionicons name="save-outline" size={22} color="#fff" />
           <Text style={styles.buttonText}>

@@ -1,7 +1,7 @@
 import { createNativeStackNavigator }   from "@react-navigation/native-stack";
 import Inicio from "../../../Screen/Inicio/Inicio";
 import CitasStack from "./CitasStack";
-import ConfiguracionStack from "./ConfiguracionStack";
+import ConfiguracionesStack from "./ConfiguracionStack";
 import ConsultoriosStack from "./ConsultoriosStack";
 import EspecialidadesStack from "./EspecialidadesStack";
 import MedicosStack from "./MedicosStack";
@@ -25,7 +25,7 @@ export default function InicioStack() {
                     />
                     <Stack.Screen
                     name="ConfiguracionFlow"
-                    component= {ConfiguracionStack}
+                    component= {ConfiguracionesStack}
                     options={{ headerShown: false }}
                     />
                     <Stack.Screen

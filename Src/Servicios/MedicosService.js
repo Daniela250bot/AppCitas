@@ -16,7 +16,7 @@ export const listarMedicos = async () => {
 
 export const eliminarMedico = async (id) => {
   try {
-    await api.delete(`/eliminarMedicos/${id}`);
+    await api.delete(`/eliminarMedico/${id}`);
     return { success: true };
   } catch (error) {
     console.error("Error al eliminar médico:", error.response ? error.response.data : error.message);
@@ -29,7 +29,7 @@ export const eliminarMedico = async (id) => {
 
 export const crearMedico = async (data) => {
   try {
-    const response = await api.post("/crearMedicos", data);
+    const response = await api.post("/crearMedico", data);
     return { success: true, data: response.data };
   } catch (error) {
     console.error("Error al crear médico:", error.response ? error.response.data : error.message);
@@ -42,7 +42,7 @@ export const crearMedico = async (data) => {
 
 export const editarMedico = async (id, data) => {
   try {
-    const response = await api.put(`/actualizarMedicos/${id}`, data);
+    const response = await api.put(`/actualizarMedico/${id}`, data);
     return { success: true, data: response.data };
   } catch (error) {
     console.error("Error al editar médico:", error.response ? error.response.data : error.message);

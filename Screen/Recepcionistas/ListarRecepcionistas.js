@@ -15,10 +15,10 @@ export default function ListarRecepcionistas() {
     try {
       const result = await listarRecepcionistas();
       if (result.success) {
-        setRecepcionistas(result.data);
+        setRecepcionistas(result.data || []);
       } else {
-        Alert.alert("Error", result.message || "No se pudieron cargar los recepcionistas");
-      }
+        Alert.alert("Error", JSON.stringify(result.message));
+     }    
     } catch (error) {
       Alert.alert("Error", "No se pudieron cargar los recepcionistas");
     } finally {
@@ -36,7 +36,7 @@ export default function ListarRecepcionistas() {
   };
 
   const handleCrear = () => {
-    navigation.navigate("CrearRecepcionista");
+    navigation.navigate("EditarRecepcionista");
   };
 
   const handleEliminar = (id) => {

@@ -1,47 +1,63 @@
-import { TextInput, Text, View, StyleSheet, Image, Alert } from "react-native";
+import { TextInput, Text, View, StyleSheet, Alert } from "react-native";
 import BottonComponent from "../../componentes/BottoComponent";
 import { useState } from "react";
 import { loginUser } from "../../Src/Servicios/AuthService";
+import { useUser } from "../../Src/Contexts/UserContext";
 
 export default function Login({ navigation }) {
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");  
-  const [loading, setLoading] = useState(false); // es para saber si estamos esperando algo o si estamos cargando algo 
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const { updateUser } = useUser();
 
-  const handleLogin =async()=>{
+  const handleLogin = async () => {
     setLoading(true);
     try {
       const result = await loginUser(email, password);
-      if (result.success){
-        Alert.alert("Exito", "Inicio de sesion exioso",[
-        {Text: "Ok", onPress: () => console.log ("Login exitoso, redirigiendo automaticamente........")},
-        ]);  
-      }else{
-        Alert.alert("Error de Login", result.message || "Ocurrio un error al inciar sesion", );
+
+      if (result.success) {
+        // 🔹 Guardamos al usuario en el contexto
+        updateUser(result.user);
+
+        Alert.alert("Éxito", "Inicio de sesión exitoso", [
+          { text: "Ok", onPress: () => navigation.replace("Inicio") },
+        ]);
+      } else {
+        Alert.alert(
+          "Error de Login",
+          typeof result.message === "string"
+            ? result.message
+            : result.message?.message ||
+                JSON.stringify(result.message) ||
+                "Ocurrió un error al iniciar sesión"
+        );
       }
     } catch (error) {
       console.error("Error inesperado en login:", error);
-      Alert.alert("Error", "Ocurrio un error inesperado al intentar iniciar sesion");
-    }finally {
-      setLoading>(false);
+      Alert.alert(
+        "Error",
+        "Ocurrió un error inesperado al intentar iniciar sesión"
+      );
+    } finally {
+      setLoading(false);
     }
-  }
+  };
 
   return (
     <View style={styles.container}>
-    
       {/* Título y subtítulo */}
       <Text style={styles.titulo}>🏥 Citas Médicas</Text>
       <Text style={styles.subtitulo}>Inicia sesión para continuar</Text>
 
       {/* Inputs */}
       <TextInput
-        style={styles.input} 
+        style={styles.input}
         placeholder=" @ Correo electrónico"
         value={email}
         onChangeText={setEmail}
         keyboardType="email-address"
         autoCapitalize="none"
+        editable={!loading}
       />
 
       <TextInput
@@ -54,12 +70,17 @@ export default function Login({ navigation }) {
       />
 
       {/* Botones */}
-      <BottonComponent title="✅ Iniciar Sesión"  onPress={handleLogin} disabled={!loading}/>
+      <BottonComponent
+        title={loading ? "⏳ Iniciando..." : "✅ Iniciar Sesión"}
+        onPress={handleLogin}
+        disabled={loading}
+      />
 
       <BottonComponent
         title="📝 ¿No tienes cuenta? Regístrate"
         onPress={() => navigation.navigate("Registro")}
         style={{ backgroundColor: "#0A2647" }} // azul oscuro secundario
+        disabled={loading}
       />
     </View>
   );
@@ -81,7 +102,7 @@ const styles = StyleSheet.create({
   titulo: {
     fontSize: 28,
     fontWeight: "bold",
-    color: "#0A74DA", 
+    color: "#0A74DA",
     marginBottom: 6,
     textAlign: "center",
   },

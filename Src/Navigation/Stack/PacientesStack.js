@@ -44,17 +44,7 @@ export default function PacientesStack() {
           headerTintColor: "#fff",
         }}
       />
-      <Stack.Screen
-        name="CrearPaciente"
-        component={CrearPaciente}
-        options={{
-          title: "Nuevo Paciente",
-          headerStyle: {
-            backgroundColor: "#007AFF",
-          },
-          headerTintColor: "#fff",
-        }}
-      />
+     
     </Stack.Navigator>
   );
 }

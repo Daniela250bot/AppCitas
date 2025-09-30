@@ -15,7 +15,7 @@ export const listarCitas = async () => {
 
 export const eliminarCita = async (id) => {
   try {
-    await api.delete(`/eliminarCitas/${id}`);
+    await api.delete(`/eliminarCita/${id}`);
     return { success: true };
   } catch (error) {
     console.error("Error al eliminar la cita:", error.response ? error.response.data : error.message);
@@ -28,7 +28,7 @@ export const eliminarCita = async (id) => {
 
 export const crearCita = async (data) => {
   try {
-    const response = await api.post("/crearCitas", data);
+    const response = await api.post("/crearCita", data);
     return { success: true, data: response.data };
   } catch (error) {
     console.error("Error al crear la cita:", error.response ? error.response.data : error.message);
@@ -41,7 +41,7 @@ export const crearCita = async (data) => {
 
 export const editarCita = async (id, data) => {
   try {
-    const response = await api.put(`/actualizarCitas/${id}`, data);
+    const response = await api.put(`/actualizarCita/${id}`, data);
     return { success: true, data: response.data };
   } catch (error) {
     console.error("Error al editar la cita:", error.response ? error.response.data : error.message);

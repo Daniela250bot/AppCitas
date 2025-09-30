@@ -10,18 +10,18 @@ export default function EditarCita() {
 
   const cita = route.params?.cita;
 
-  const [Fecha, setFecha] = useState(cita ? cita.Fecha : "");
+  const [Fecha_cita, setFecha_cita] = useState(cita ? cita.Fecha_cita : "");
   const [Hora, setHora] = useState(cita ? cita.Hora : "");
-  const [PacienteId, setPacienteId] = useState(cita ? cita.PacienteId.toString() : "");
-  const [MedicoId, setMedicoId] = useState(cita ? cita.MedicoId.toString() : "");
-  const [ConsultorioId, setConsultorioId] = useState(cita ? cita.ConsultorioId.toString() : "");
-  const [Motivo, setMotivo] = useState(cita ? cita.Motivo : "");
+  const [idPaciente, setidPaciente] = useState(cita ? String (cita.idPaciente) : "");
+  const [idMedico, setidMedico] = useState(cita ? String (cita.idMedico) : "");
+  const [idRecepcionista, setidRecepcionista] = useState(cita ? String(cita.idRecepcionista) : "");
+  const [Estado, setEstado] = useState(cita ? cita.Estado : "");
   const [loading, setLoading] = useState(false);
 
   const esEdicion = !!cita; // true si estamos editando
 
   const handleGuardar = async () => {
-    if (!Fecha || !Hora || !PacienteId || !MedicoId || !ConsultorioId || !Motivo) {
+    if (!Fecha_cita || !Hora || !idPaciente || !idMedico || !idRecepcionista || !Estado) {
       Alert.alert("Error", "Por favor, completa todos los campos.");
       return;
     }
@@ -30,21 +30,21 @@ export default function EditarCita() {
       let result;
       if (esEdicion) {
         result = await editarCita(cita.id, {
-          Fecha,
+          Fecha_cita,
           Hora,
-          PacienteId,
-          MedicoId,
-          ConsultorioId,
-          Motivo,
+          idPaciente,
+          idMedico,
+          idRecepcionista,
+          Estado,
         });
       } else {
         result = await crearCita({
-          Fecha,
+          Fecha_cita,
           Hora,
-          PacienteId,
-          MedicoId,
-          ConsultorioId,
-          Motivo,
+          idPaciente,
+          idMedico,
+          idRecepcionista,
+          Estado,
         });
       }
       if (result.success) {
@@ -70,8 +70,8 @@ export default function EditarCita() {
         <TextInput
           style={styles.input}
           placeholder="Fecha (YYYY-MM-DD)"
-          value={Fecha}
-          onChangeText={setFecha}
+          value={Fecha_cita}
+          onChangeText={setFecha_cita}
         />
         <TextInput
           style={styles.input}
@@ -82,29 +82,29 @@ export default function EditarCita() {
         <TextInput
           style={styles.input}
           placeholder="ID Paciente"
-          value={PacienteId}
-          onChangeText={setPacienteId}
+          value={idPaciente}
+          onChangeText={setidPaciente}
           keyboardType="numeric"
         />
         <TextInput
           style={styles.input}
           placeholder="ID Médico"
-          value={MedicoId}
-          onChangeText={setMedicoId}
+          value={idMedico}
+          onChangeText={setidMedico}
           keyboardType="numeric"
         />
         <TextInput
           style={styles.input}
-          placeholder="ID Consultorio"
-          value={ConsultorioId}
-          onChangeText={setConsultorioId}
+          placeholder="ID Recepcionista"
+          value={idRecepcionista}
+          onChangeText={setidRecepcionista}
           keyboardType="numeric"
         />
         <TextInput
           style={styles.input}
-          placeholder="Motivo de la cita"
-          value={Motivo}
-          onChangeText={setMotivo}
+          placeholder="Estado de la cita"
+          value={Estado}
+          onChangeText={setEstado}
         />
 
         <TouchableOpacity style={styles.button} onPress={handleGuardar} disabled={loading}>

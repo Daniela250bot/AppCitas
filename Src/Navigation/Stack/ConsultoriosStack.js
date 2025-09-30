@@ -44,17 +44,7 @@ export default function ConsultoriosStack() {
           headerTintColor: "#fff",
         }}
       />
-      <Stack.Screen
-        name="CrearConsultorio"
-        component={CrearConsultorio}
-        options={{
-          title: "Nuevo Consultorio",
-          headerStyle: {
-            backgroundColor: "#007AFF",
-          },
-          headerTintColor: "#fff",
-        }}
-      />
+
     </Stack.Navigator>
   );
 }

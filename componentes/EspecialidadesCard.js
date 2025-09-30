@@ -2,7 +2,9 @@ import { View, Text, Pressable, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
 export default function EspecialidadesCard({ especialidad, onEdit, onDelete, onPress }) {
-  const inicial = especialidad.Nombre ? especialidad.Nombre.charAt(0).toUpperCase() : "?";
+   if (!especialidad) return null;
+
+   const inicial = especialidad.Nombre ? especialidad.Nombre.charAt(0).toUpperCase() : "?";
 
   return (
     <Pressable
@@ -16,22 +18,10 @@ export default function EspecialidadesCard({ especialidad, onEdit, onDelete, onP
 
       {/* Info */}
       <View style={styles.info}>
-        <Text style={styles.nombre}>{especialidad.Nombre}</Text>
+        <Text style={styles.nombre}>{especialidad?.Nombre ?? "Sin nombre"}</Text>
 
-        <View style={styles.row}>
-          <Ionicons name="card-outline" size={16} color="#555" />
-          <Text style={styles.detalle}> {especialidad.Documento}</Text>
-        </View>
+        <Text style={styles.detalle}>{especialidad?.Descripcion ?? "Sin descripción"}</Text>
 
-        <View style={styles.row}>
-          <Ionicons name="call-outline" size={16} color="#555" />
-          <Text style={styles.detalle}> {especialidad.Telefono}</Text>
-        </View>
-
-        <View style={styles.row}>
-          <Ionicons name="mail-outline" size={16} color="#555" />
-          <Text style={styles.detalle}> {especialidad.Email}</Text>
-        </View>
       </View>
 
       {/* Botones Editar / Eliminar */}
