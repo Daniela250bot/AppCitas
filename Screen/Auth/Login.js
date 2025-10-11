@@ -77,9 +77,9 @@ export default function Login({ navigation }) {
       />
 
       <BottonComponent
-        title="📝 ¿No tienes cuenta? Regístrate"
+        title="📝 ¿No tienes una cuenta? Regístrate"
         onPress={() => navigation.navigate("Registro")}
-        style={{ backgroundColor: "#0A2647" }} // azul oscuro secundario
+        style={{ backgroundColor: "#0A2647" }} 
         disabled={loading}
       />
     </View>
@@ -89,7 +89,7 @@ export default function Login({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#F5F9FF", // Fondo claro suave
+    backgroundColor: "#F5F9FF", 
     justifyContent: "center",
     alignItems: "center",
     padding: 20,

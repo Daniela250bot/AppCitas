@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, StyleSheet, Alert, ScrollView } from "react-native";
+import { View, Text, TextInput, StyleSheet, Alert, ScrollView, TouchableOpacity } from "react-native";
 import BottonComponent from "../../componentes/BottoComponent";
 import { registerUser } from "../../Src/Servicios/AuthService";
 
@@ -13,9 +13,12 @@ export default function Registro({ navigation }) {
   const [genero, setGenero] = useState("");
   const [rh, setRh] = useState("");
   const [nacionalidad, setNacionalidad] = useState("");
+  const [turno, setTurno] = useState("");
+  const [idConsultorio, setIdConsultorio] = useState("");
+  const [idEspecialidad, setIdEspecialidad] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [role, setRol] = useState("");
+  const [selectedRole, setSelectedRole] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleRegister = async () => {
@@ -46,13 +49,8 @@ export default function Registro({ navigation }) {
       Alert.alert("⚠️ Error", "Las contraseñas no coinciden");
       return;
     }
-    if (!role.trim()) {
-      Alert.alert("⚠️ Error", "El rol es obligatorio");
-      return;
-    }
-    const validRoles = ['Recepcionista', 'Paciente', 'Medico'];
-    if (!validRoles.includes(role)) {
-      Alert.alert("⚠️ Error", "El rol debe ser Recepcionista, Paciente o Medico");
+    if (!selectedRole) {
+      Alert.alert("⚠️ Error", "Debes seleccionar un rol");
       return;
     }
 
@@ -67,8 +65,11 @@ export default function Registro({ navigation }) {
       genero,
       rh,
       nacionalidad,
+      turno,
+      idConsultorio,
+      idEspecialidad,
       password,
-      role
+      role: selectedRole
     };
 
     try {
@@ -104,18 +105,64 @@ export default function Registro({ navigation }) {
     <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.titulo}>📝 Registro de Usuario</Text>
 
+      
+      <Text style={styles.label}>Selecciona tu Rol:</Text>
+      <View style={styles.roleButtons}>
+        <TouchableOpacity
+          style={[styles.roleButton, selectedRole === 'Paciente' && styles.selectedRole]}
+          onPress={() => setSelectedRole('Paciente')}
+        >
+          <Text style={[styles.roleText, selectedRole === 'Paciente' && styles.selectedRoleText]}>𝙿𝚊𝚌𝚒𝚎𝚗𝚝𝚎</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.roleButton, selectedRole === 'Medico' && styles.selectedRole]}
+          onPress={() => setSelectedRole('Medico')}
+        >
+          <Text style={[styles.roleText, selectedRole === 'Medico' && styles.selectedRoleText]}>𝙼𝚎𝚍𝚒𝚌𝚘 </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.roleButton, selectedRole === 'Recepcionista' && styles.selectedRole]}
+          onPress={() => setSelectedRole('Recepcionista')}
+        >
+          <Text style={[styles.roleText, selectedRole === 'Recepcionista' && styles.selectedRoleText]}>𝚁𝚎𝚌𝚎𝚙𝚌𝚒𝚘𝚗𝚒𝚜𝚝𝚊</Text>
+        </TouchableOpacity>
+        
+      </View>
+
       <TextInput style={styles.input} placeholder="Nombre *" value={name} onChangeText={setName} />
-      <TextInput style={styles.input} placeholder="Apellido" value={apellido} onChangeText={setApellido} />
-      <TextInput style={styles.input} placeholder="Documento" value={documento} onChangeText={setDocumento} />
-      <TextInput style={styles.input} placeholder="Teléfono" value={telefono} onChangeText={setTelefono} keyboardType="phone-pad" />
       <TextInput style={styles.input} placeholder="Correo *" value={email} onChangeText={setEmail} keyboardType="email-address" autoCapitalize="none" />
-      <TextInput style={styles.input} placeholder="Fecha de nacimiento (YYYY-MM-DD)" value={fechaNacimiento} onChangeText={setFechaNacimiento} />
-      <TextInput style={styles.input} placeholder="Género" value={genero} onChangeText={setGenero} />
-      <TextInput style={styles.input} placeholder="RH" value={rh} onChangeText={setRh} />
-      <TextInput style={styles.input} placeholder="Nacionalidad" value={nacionalidad} onChangeText={setNacionalidad} />
       <TextInput style={styles.input} placeholder="Contraseña *" secureTextEntry value={password} onChangeText={setPassword} />
       <TextInput style={styles.input} placeholder="Confirmar Contraseña *" secureTextEntry value={confirmPassword} onChangeText={setConfirmPassword} />
-      <TextInput style={styles.input} placeholder="Rol (Recepcionista, paciente, medico)" value={role} onChangeText={setRol}/>
+
+
+      {selectedRole && (
+        <>
+          <TextInput style={styles.input} placeholder="Apellido" value={apellido} onChangeText={setApellido} />
+          <TextInput style={styles.input} placeholder="Teléfono" value={telefono} onChangeText={setTelefono} keyboardType="phone-pad" />
+
+          {selectedRole === 'Paciente' && (
+            <>
+              <TextInput style={styles.input} placeholder="Documento" value={documento} onChangeText={setDocumento} />
+              <TextInput style={styles.input} placeholder="Fecha de nacimiento (YYYY-MM-DD)" value={fechaNacimiento} onChangeText={setFechaNacimiento} />
+              <TextInput style={styles.input} placeholder="Género" value={genero} onChangeText={setGenero} />
+              <TextInput style={styles.input} placeholder="RH" value={rh} onChangeText={setRh} />
+              <TextInput style={styles.input} placeholder="Nacionalidad" value={nacionalidad} onChangeText={setNacionalidad} />
+            </>
+          )}
+
+          {selectedRole === 'Medico' && (
+            <>
+              <TextInput style={styles.input} placeholder="Documento" value={documento} onChangeText={setDocumento} />
+              <TextInput style={styles.input} placeholder="ID Consultorio" value={idConsultorio} onChangeText={setIdConsultorio} keyboardType="numeric" />
+              <TextInput style={styles.input} placeholder="ID Especialidad" value={idEspecialidad} onChangeText={setIdEspecialidad} keyboardType="numeric" />
+            </>
+          )}
+
+          {selectedRole === 'Recepcionista' && (
+            <TextInput style={styles.input} placeholder="Turno" value={turno} onChangeText={setTurno} />
+          )}
+        </>
+      )}
 
       <BottonComponent 
         title={loading ? "⏳ Registrando..." : "✅ Registrarse"} 
@@ -162,5 +209,38 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 4,
     elevation: 2,
+  },
+  label: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#0A74DA",
+    marginBottom: 10,
+    textAlign: "center",
+  },
+  roleButtons: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    marginBottom: 20,
+  },
+  roleButton: {
+    padding: 12,
+    borderWidth: 1,
+    borderColor: "#0A74DA",
+    borderRadius: 8,
+    backgroundColor: "#fff",
+    flex: 1,
+    marginHorizontal: 5,
+    alignItems: "center",
+  },
+  selectedRole: {
+    backgroundColor: "#0A74DA",
+  },
+  roleText: {
+    fontSize: 14,
+    fontWeight: "bold",
+    color: "#0A74DA",
+  },
+  selectedRoleText: {
+    color: "#fff",
   },
 });

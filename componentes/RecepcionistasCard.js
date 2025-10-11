@@ -11,7 +11,7 @@ export default function RecepcionistasCard({ recepcionista, onEdit, onDelete, on
   return (
     <Pressable
       style={styles.card}
-      onPress={onPress} // 👉 al presionar abre DetalleRecepcionista
+      onPress={onPress} 
     >
       {/* Avatar */}
       <View style={styles.avatar}>
