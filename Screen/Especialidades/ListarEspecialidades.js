@@ -2,12 +2,14 @@ import { View, Text, FlatList, ActivityIndicator, Alert, TouchableOpacity, Style
 import { listarEspecialidades, eliminarEspecialidad } from "../../Src/Servicios/EspecialidadesService";
 import { useNavigation } from "@react-navigation/native";
 import EspecialidadesCard from "../../componentes/EspecialidadesCard";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
+import { UserContext } from "../../Src/Contexts/UserContext";
 
 export default function ListarEspecialidades() {
   const [especialidades, setEspecialidades] = useState([]);
   const navigation = useNavigation();
   const [loading, setLoading] = useState(false);
+  const { isMedico, isRecepcionista, isAdmin } = useContext(UserContext);
 
   const handleEspecialidades = async () => {
     setLoading(true);
@@ -88,9 +90,11 @@ export default function ListarEspecialidades() {
         ListEmptyComponent={<Text style={styles.empty}>No hay Especialidades Registradas.</Text>}
       />
 
-      <TouchableOpacity style={styles.botonCrear} onPress={handleCrear}>
-        <Text style={styles.textBotton}>+ Nueva Especialidad</Text>
-      </TouchableOpacity>
+      {(isRecepcionista() || isAdmin()) && (
+        <TouchableOpacity style={styles.botonCrear} onPress={handleCrear}>
+          <Text style={styles.textBotton}>+ Nueva Especialidad</Text>
+        </TouchableOpacity>
+      )}
     </View>
   );
 }

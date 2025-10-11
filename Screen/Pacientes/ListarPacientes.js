@@ -2,12 +2,14 @@ import { View, Text, FlatList, ActivityIndicator, Alert, TouchableOpacity, Style
 import { listarPacientes, eliminarPaciente } from "../../Src/Servicios/PacienteService";
 import { useNavigation } from "@react-navigation/native";
 import PacientesCard from "../../componentes/PacientesCard";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
+import { UserContext } from "../../Src/Contexts/UserContext";
 
 export default function ListarPacientes (){
     const [pacientes, setPacientes] = useState([]);
-    const navegation = useNavigation(); 
-    const [loading, setLoading] = useState(false); 
+    const navegation = useNavigation();
+    const [loading, setLoading] = useState(false);
+    const { isMedico } = useContext(UserContext);
 
 
     const handlePacientes = async () =>{
@@ -83,8 +85,8 @@ export default function ListarPacientes (){
           renderItem={({item}) => (
             <PacientesCard
               paciente={item}
-              onEdit={() => handleEditar(item)}
-              onDelete={() => handleEliminar(item.id)}
+              onEdit={isMedico() ? null : () => handleEditar(item)}
+              onDelete={isMedico() ? null : () => handleEliminar(item.id)}
               onPress={() => navegation.navigate("DetallePaciente", { paciente: item })} // abre detalle
             />
 
@@ -92,9 +94,11 @@ export default function ListarPacientes (){
           ListEmptyComponent={<Text style={styles.empty}> No hay Pacientes Registrados.</Text>}
         />
 
-        <TouchableOpacity style={styles.botonCrear} onPress={handleCrear}>
-          <Text style={styles.textBotton}>+Nuevo Paciente</Text>
-        </TouchableOpacity>
+        {!isMedico() && (
+          <TouchableOpacity style={styles.botonCrear} onPress={handleCrear}>
+            <Text style={styles.textBotton}>+Nuevo Paciente</Text>
+          </TouchableOpacity>
+        )}
       </View>
 
     );

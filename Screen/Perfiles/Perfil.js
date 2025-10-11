@@ -121,6 +121,7 @@ export default function Perfil() {
                     <View style={styles.card}>
                         <Text style={styles.label}>Nombre: {usuario.user.name || "No disponible"}</Text>
                         <Text style={styles.label}>Correo: {usuario.user.email || "No disponible"}</Text>
+                        <Text style={styles.roleLabel}>Rol: {usuario.user.role || "No disponible"}</Text>
                     </View>
                 </>
             ) : (
@@ -173,6 +174,19 @@ const styles = StyleSheet.create({
         marginBottom: 8,
         color: "#333",
         textAlign: "center",
+    },
+    roleLabel: {
+        fontSize: 18,
+        marginBottom: 8,
+        color: "#0A74DA",
+        textAlign: "center",
+        fontWeight: "bold",
+        backgroundColor: "#E8F4FD",
+        paddingVertical: 8,
+        paddingHorizontal: 16,
+        borderRadius: 20,
+        marginTop: 10,
+        overflow: "hidden",
     },
     errorText: {
         color: "red",

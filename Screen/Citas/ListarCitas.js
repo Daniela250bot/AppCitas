@@ -2,12 +2,14 @@ import { View, Text, FlatList, ActivityIndicator, Alert, TouchableOpacity, Style
 import { listarCitas, eliminarCita } from "../../Src/Servicios/CitasService";
 import { useNavigation } from "@react-navigation/native";
 import CitasCard from "../../componentes/CitasCard";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
+import { UserContext } from "../../Src/Contexts/UserContext";
 
 export default function ListarCitas() {
   const [citas, setCitas] = useState([]);
   const navigation = useNavigation();
   const [loading, setLoading] = useState(false);
+  const { isPaciente, isMedico } = useContext(UserContext);
 
   const handleCitas = async () => {
     setLoading(true);
@@ -16,7 +18,11 @@ export default function ListarCitas() {
       if (result.success) {
         setCitas(result.data || []);
       } else {
-        Alert.alert("Error", result.message || "No se pudieron cargar las citas");
+        let mensaje = result.message;
+        if (typeof mensaje !== "string") {
+          mensaje = JSON.stringify(mensaje);
+        }
+        Alert.alert("Error", mensaje || "No se pudieron cargar las citas");
       }
     } catch (error) {
       Alert.alert("Error", "No se pudieron cargar las citas");
@@ -53,7 +59,11 @@ export default function ListarCitas() {
               if (result.success) {
                 handleCitas();
               } else {
-               Alert.alert("Error", JSON.stringify(result.message));
+                let mensaje = result.message;
+                if (typeof mensaje !== "string") {
+                  mensaje = JSON.stringify(mensaje);
+                }
+                Alert.alert("Error", mensaje);
               }
             } catch (error) {
               Alert.alert("Error", "No se pudo eliminar la cita");
@@ -80,17 +90,19 @@ export default function ListarCitas() {
         renderItem={({ item }) => (
           <CitasCard
             cita={item}
-            onEdit={() => handleEditar(item)}
-            onDelete={() => handleEliminar(item.id)}
+            onEdit={isPaciente() ? null : () => handleEditar(item)}
+            onDelete={isPaciente() ? null : () => handleEliminar(item.id)}
             onPress={() => navigation.navigate("DetalleCita", { cita: item })}
           />
         )}
         ListEmptyComponent={<Text style={styles.empty}>No hay Citas Registradas.</Text>}
       />
 
-      <TouchableOpacity style={styles.botonCrear} onPress={handleCrear}>
-        <Text style={styles.textBotton}>+ Nueva Cita</Text>
-      </TouchableOpacity>
+      {!isPaciente() && !isMedico() && (
+        <TouchableOpacity style={styles.botonCrear} onPress={handleCrear}>
+          <Text style={styles.textBotton}>+ Nueva Cita</Text>
+        </TouchableOpacity>
+      )}
     </View>
   );
 }

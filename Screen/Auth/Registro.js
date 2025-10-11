@@ -14,13 +14,45 @@ export default function Registro({ navigation }) {
   const [rh, setRh] = useState("");
   const [nacionalidad, setNacionalidad] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [role, setRol] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleRegister = async () => {
     // Validación básica
-    if (!name || !email || !password) {
-      Alert.alert("⚠️ Error", "Nombre, email y contraseña son obligatorios");
+    if (!name.trim()) {
+      Alert.alert("⚠️ Error", "El nombre es obligatorio");
+      return;
+    }
+    if (!email.trim()) {
+      Alert.alert("⚠️ Error", "El email es obligatorio");
+      return;
+    }
+    // Validar formato de email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      Alert.alert("⚠️ Error", "El formato del email no es válido");
+      return;
+    }
+    if (!password) {
+      Alert.alert("⚠️ Error", "La contraseña es obligatoria");
+      return;
+    }
+    if (password.length < 8) {
+      Alert.alert("⚠️ Error", "La contraseña debe tener al menos 8 caracteres");
+      return;
+    }
+    if (password !== confirmPassword) {
+      Alert.alert("⚠️ Error", "Las contraseñas no coinciden");
+      return;
+    }
+    if (!role.trim()) {
+      Alert.alert("⚠️ Error", "El rol es obligatorio");
+      return;
+    }
+    const validRoles = ['Recepcionista', 'Paciente', 'Medico'];
+    if (!validRoles.includes(role)) {
+      Alert.alert("⚠️ Error", "El rol debe ser Recepcionista, Paciente o Medico");
       return;
     }
 
@@ -46,12 +78,20 @@ export default function Registro({ navigation }) {
           { text: "OK", onPress: () => navigation.navigate("Login") },
         ]);
       } else {
- Alert.alert(
-            "Error de Login",
-            typeof result.message === "string"
-              ? result.message
-              : result.message?.message || JSON.stringify(result.message) || "Ocurrió un error al iniciar sesión"
-          );            }
+        let errorMessage = "Ocurrió un error al registrar el usuario";
+        if (result.message && typeof result.message === "object") {
+          if (result.message.errors) {
+            const errors = result.message.errors;
+            const errorList = Object.keys(errors).map(key => `${key}: ${errors[key].join(', ')}`).join('\n');
+            errorMessage = errorList;
+          } else if (result.message.message) {
+            errorMessage = result.message.message;
+          }
+        } else if (typeof result.message === "string") {
+          errorMessage = result.message;
+        }
+        Alert.alert("❌ Error de Registro", errorMessage);
+      }
     } catch (error) {
       console.error("Error en registro:", error);
       Alert.alert("❌ Error", "No se pudo registrar el usuario");
@@ -74,10 +114,12 @@ export default function Registro({ navigation }) {
       <TextInput style={styles.input} placeholder="RH" value={rh} onChangeText={setRh} />
       <TextInput style={styles.input} placeholder="Nacionalidad" value={nacionalidad} onChangeText={setNacionalidad} />
       <TextInput style={styles.input} placeholder="Contraseña *" secureTextEntry value={password} onChangeText={setPassword} />
-      <TextInput style={styles.input} placeholder="Rol (ej. paciente, medico)" value={role} onChangeText={setRol}/>
+      <TextInput style={styles.input} placeholder="Confirmar Contraseña *" secureTextEntry value={confirmPassword} onChangeText={setConfirmPassword} />
+      <TextInput style={styles.input} placeholder="Rol (Recepcionista, paciente, medico)" value={role} onChangeText={setRol}/>
 
       <BottonComponent 
         title={loading ? "⏳ Registrando..." : "✅ Registrarse"} 
+        
         onPress={handleRegister} 
         disabled={loading} 
       />

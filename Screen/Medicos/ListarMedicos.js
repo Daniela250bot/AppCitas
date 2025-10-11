@@ -2,12 +2,14 @@ import { View, Text, FlatList, ActivityIndicator, Alert, TouchableOpacity, Style
 import { listarMedicos, eliminarMedico } from "../../Src/Servicios/MedicosService";
 import { useNavigation } from "@react-navigation/native";
 import MedicosCard from "../../componentes/MedicosCard";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
+import { UserContext } from "../../Src/Contexts/UserContext";
 
 export default function ListarMedicos() {
   const [medicos, setMedicos] = useState([]);
   const navigation = useNavigation();
   const [loading, setLoading] = useState(false);
+  const { isMedico, isRecepcionista, isAdmin } = useContext(UserContext);
 
   const handleMedicos = async () => {
     setLoading(true);
@@ -80,17 +82,19 @@ export default function ListarMedicos() {
         renderItem={({ item }) => (
           <MedicosCard
             medico={item}
-            onEdit={() => handleEditar(item)}
-            onDelete={() => handleEliminar(item.id)}
+            onEdit={(isRecepcionista() || isAdmin()) ? () => handleEditar(item) : null}
+            onDelete={(isRecepcionista() || isAdmin()) ? () => handleEliminar(item.id) : null}
             onPress={() => navigation.navigate("DetalleMedico", { medico: item })}
           />
         )}
         ListEmptyComponent={<Text style={styles.empty}>No hay Médicos Registrados.</Text>}
       />
 
-      <TouchableOpacity style={styles.botonCrear} onPress={handleCrear}>
-        <Text style={styles.textBotton}>+ Nuevo Médico</Text>
-      </TouchableOpacity>
+      {(isRecepcionista() || isAdmin()) && (
+        <TouchableOpacity style={styles.botonCrear} onPress={handleCrear}>
+          <Text style={styles.textBotton}>+ Nuevo Médico</Text>
+        </TouchableOpacity>
+      )}
     </View>
   );
 }

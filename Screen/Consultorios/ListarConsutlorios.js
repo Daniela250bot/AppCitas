@@ -16,7 +16,7 @@ export default function ListarConsultorios() {
       if (result.success) {
         setConsultorios(result.data || []);
       } else {
-        Alert.alert("Error", result.message || "No se pudieron cargar los consultorios");
+         Alert.alert("Error", result.message || "No se pudieron cargar los consultorios");
       }
     } catch (error) {
       Alert.alert("Error", "No se pudieron cargar los consultorios");

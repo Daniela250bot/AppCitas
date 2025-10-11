@@ -1,11 +1,13 @@
-import React from "react";
+import React, { useContext } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
+import { UserContext } from "../../Src/Contexts/UserContext";
 
 export default function DetalleCita() {
   const navigation = useNavigation();
   const route = useRoute();
+  const { isPaciente, isMedico } = useContext(UserContext);
 
   const { cita } = route.params || {};
 
@@ -21,38 +23,37 @@ export default function DetalleCita() {
     <ScrollView style={styles.container}>
       <Text style={styles.headerTitle}>Detalle de la Cita Médica</Text>
 
-      {/* Mostrar información */}
       <View style={styles.card}>
         <Text style={styles.label}>📅 Fecha:</Text>
-        <Text style={styles.value}>{cita?.Fecha ?? "N/A"}</Text>
+        <Text style={styles.value}>{cita?.Fecha_cita ?? "N/A"}</Text>
 
         <Text style={styles.label}>⏰ Hora:</Text>
         <Text style={styles.value}>{cita?.Hora ?? "N/A"}</Text>
-
-        <Text style={styles.label}>📝 Motivo:</Text>
-        <Text style={styles.value}>{cita?.Motivo ?? "N/A"}</Text>
 
         <Text style={styles.label}>📌 Estado:</Text>
         <Text style={styles.value}>{cita?.Estado ?? "N/A"}</Text>
 
         <Text style={styles.label}>👤 ID Paciente:</Text>
-        <Text style={styles.value}>{cita?.Id_paciente ?? "N/A"}</Text>
+        <Text style={styles.value}>{cita?.idPaciente ?? "N/A"}</Text>
 
         <Text style={styles.label}>🩺 ID Médico:</Text>
-        <Text style={styles.value}>{cita?.Id_medico ?? "N/A"}</Text>
+        <Text style={styles.value}>{cita?.idMedico ?? "N/A"}</Text>
 
-        <Text style={styles.label}>🏥 ID Consultorio:</Text>
-        <Text style={styles.value}>{cita?.Id_consultorio ?? "N/A"}</Text>
+        <Text style={styles.label}>👨‍⚕️ ID Recepcionista:</Text>
+        <Text style={styles.value}>{cita?.idRecepcionista ?? "N/A"}</Text>
+
       </View>
 
-      {/* Botones de acción */}
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => navigation.navigate("EditarCitas", { cita })}
-      >
-        <Ionicons name="create-outline" size={22} color="#fff" />
-        <Text style={styles.buttonText}>Editar Cita</Text>
-      </TouchableOpacity>
+      {/* Solo mostrar botón de editar si no es paciente (médicos y otros roles pueden editar) */}
+      {!isPaciente() && (
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => navigation.navigate("EditarCitas", { cita })}
+        >
+          <Ionicons name="create-outline" size={22} color="#fff" />
+          <Text style={styles.buttonText}>Editar Cita</Text>
+        </TouchableOpacity>
+      )}
 
       <TouchableOpacity style={[styles.button, { backgroundColor: "#EF4444" }]} onPress={() => navigation.goBack()}>
         <Ionicons name="arrow-back-outline" size={22} color="#fff" />

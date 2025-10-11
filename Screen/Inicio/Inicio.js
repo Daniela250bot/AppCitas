@@ -62,8 +62,8 @@ export default function Inicio({ navigation }) {
       );
     }
 
-    // Especialidades: Admin, Médico
-    if (isAdmin() || isMedico()) {
+    // Especialidades: Admin, Médico, Recepcionista
+    if (isAdmin() || isMedico() || isRecepcionista()) {
       cards.push(
         <CardComponents
           key="especialidades"

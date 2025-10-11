@@ -25,29 +25,35 @@ export default function EspecialidadesCard({ especialidad, onEdit, onDelete, onP
       </View>
 
       {/* Botones Editar / Eliminar */}
-      <View style={styles.actions}>
-        <Pressable
-          onPress={onEdit}
-          style={({ pressed }) => [
-            styles.button,
-            styles.editBtn,
-            pressed && styles.pressed,
-          ]}
-        >
-          <Ionicons name="create-outline" size={18} color="#fff" />
-        </Pressable>
+      {(onEdit || onDelete) && (
+        <View style={styles.actions}>
+          {onEdit && (
+            <Pressable
+              onPress={onEdit}
+              style={({ pressed }) => [
+                styles.button,
+                styles.editBtn,
+                pressed && styles.pressed,
+              ]}
+            >
+              <Ionicons name="create-outline" size={18} color="#fff" />
+            </Pressable>
+          )}
 
-        <Pressable
-          onPress={onDelete}
-          style={({ pressed }) => [
-            styles.button,
-            styles.deleteBtn,
-            pressed && styles.pressed,
-          ]}
-        >
-          <Ionicons name="trash-outline" size={18} color="#fff" />
-        </Pressable>
-      </View>
+          {onDelete && (
+            <Pressable
+              onPress={onDelete}
+              style={({ pressed }) => [
+                styles.button,
+                styles.deleteBtn,
+                pressed && styles.pressed,
+              ]}
+            >
+              <Ionicons name="trash-outline" size={18} color="#fff" />
+            </Pressable>
+          )}
+        </View>
+      )}
     </Pressable>
   );
 }

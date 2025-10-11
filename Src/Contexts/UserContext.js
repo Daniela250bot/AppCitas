@@ -1,7 +1,7 @@
   import React, { createContext, useContext, useState, useEffect } from 'react';
-  import { getUserData } from '../Servicios/AuthService';
+  import { getUserData } from '../../Src/Servicios/AuthService';
 
-  const UserContext = createContext();
+  export const UserContext = createContext();
 
   export const useUser = () => {
     const context = useContext(UserContext);
@@ -17,9 +17,14 @@
 
     useEffect(() => {
       const loadUser = async () => {
-        const userData = await getUserData();
-        setUser(userData);
-        setLoading(false);
+        try {
+          const userData = await getUserData();
+          setUser(userData);
+          setLoading(false);
+        } catch (error) {
+          console.error('Error loading user:', error);
+          setLoading(false);
+        }
       };
       loadUser();
     }, []);

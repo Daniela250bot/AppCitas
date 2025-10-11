@@ -4,8 +4,8 @@ import { Ionicons } from "@expo/vector-icons";
 export default function CitasCard({ cita, onEdit, onDelete, onPress }) {
    if (!cita) return null;
 
-   const inicial = cita?.Paciente?.Nombre
-     ? cita.Paciente.Nombre.charAt(0).toUpperCase()
+   const inicial = cita?.paciente?.Nombre
+     ? cita.paciente.Nombre.charAt(0).toUpperCase()
      : "?";
 
   return (
@@ -20,25 +20,25 @@ export default function CitasCard({ cita, onEdit, onDelete, onPress }) {
 
       {/* Info */}
       <View style={styles.info}>
-        <Text style={styles.nombre}>
-           {cita?.idPaciente?.Nombre ?? "Sin nombre"} {cita?.Estado ?? ""}
-         </Text>
+            <Text style={styles.titulo}>
+          {cita?.Titulo ?? " citas"}
+        </Text>
 
          <View style={styles.row}>
            <Ionicons name="medkit-outline" size={16} color="#555" />
-           <Text style={styles.detalle}> id Medico : {cita?.idMedico ?? "N/A"}
+           <Text style={styles.detalle}> Médico: {cita?.medico?.Nombre ?? "N/A"} {cita?.medico?.Apellido ?? ""}
            </Text>
          </View>
 
           <View style={styles.row}>
-           <Ionicons name="medkit-outline" size={16} color="#555" />
-           <Text style={styles.detalle}> id Pacientes : {cita?.idPaciente ?? "N/A"}
+           <Ionicons name="person-outline" size={16} color="#555" />
+           <Text style={styles.detalle}> Paciente: {cita?.paciente?.Nombre ?? "N/A"} {cita?.paciente?.Apellido ?? ""}
            </Text>
          </View>
 
           <View style={styles.row}>
-           <Ionicons name="medkit-outline" size={16} color="#555" />
-           <Text style={styles.detalle}> id Recepcionista : {cita?.idRecepcionista ?? "N/A"}
+           <Ionicons name="person-outline" size={16} color="#555" />
+           <Text style={styles.detalle}> Recepcionista: {cita?.recepcionista?.Nombre ?? "N/A"} {cita?.recepcionista?.Apellido ?? ""}
            </Text>
          </View>
 
@@ -54,30 +54,36 @@ export default function CitasCard({ cita, onEdit, onDelete, onPress }) {
 
       </View>
 
-      {/* Botones Editar / Eliminar */}
-      <View style={styles.actions}>
-        <Pressable
-          onPress={onEdit}
-          style={({ pressed }) => [
-            styles.button,
-            styles.editBtn,
-            pressed && styles.pressed,
-          ]}
-        >
-          <Ionicons name="create-outline" size={18} color="#fff" />
-        </Pressable>
+      {/* Botones Editar / Eliminar - Solo se muestran si se proporcionan las funciones onEdit y onDelete */}
+      {(onEdit || onDelete) && (
+        <View style={styles.actions}>
+          {onEdit && (
+            <Pressable
+              onPress={onEdit}
+              style={({ pressed }) => [
+                styles.button,
+                styles.editBtn,
+                pressed && styles.pressed,
+              ]}
+            >
+              <Ionicons name="create-outline" size={18} color="#fff" />
+            </Pressable>
+          )}
 
-        <Pressable
-          onPress={onDelete}
-          style={({ pressed }) => [
-            styles.button,
-            styles.deleteBtn,
-            pressed && styles.pressed,
-          ]}
-        >
-          <Ionicons name="trash-outline" size={18} color="#fff" />
-        </Pressable>
-      </View>
+          {onDelete && (
+            <Pressable
+              onPress={onDelete}
+              style={({ pressed }) => [
+                styles.button,
+                styles.deleteBtn,
+                pressed && styles.pressed,
+              ]}
+            >
+              <Ionicons name="trash-outline" size={18} color="#fff" />
+            </Pressable>
+          )}
+        </View>
+      )}
     </Pressable>
   );
 }
@@ -134,6 +140,12 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     marginLeft: 8,
   },
+
+  titulo: {
+  fontSize: 25,
+  fontWeight: "600",
+  color: "#444",
+ }, 
   button: {
     padding: 8,
     borderRadius: 8,
@@ -153,3 +165,4 @@ const styles = StyleSheet.create({
     transform: [{ scale: 0.95 }],
   },
 });
+

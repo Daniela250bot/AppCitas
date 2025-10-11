@@ -3,17 +3,17 @@ import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from "react-nati
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 
-export default function DetalleEspecialista() {
+export default function DetalleEspecialidad() {
   const navigation = useNavigation();
   const route = useRoute();
 
-  const { especialista } = route.params || {};
+  const { especialidad } = route.params || {};
 
-  if (!especialista) {
+  if (!especialidad) {
     return (
       <View style={styles.container}>
         <Text style={styles.errorText}>
-          No se encontró la información del especialista.
+          No se encontró la información de la especialidad.
         </Text>
       </View>
     );
@@ -21,42 +21,27 @@ export default function DetalleEspecialista() {
 
   return (
     <ScrollView style={styles.container}>
-      <Text style={styles.headerTitle}>🩺 Detalle del Especialista</Text>
+      <Text style={styles.headerTitle}>🎓 Detalle de la Especialidad</Text>
 
-      {/* Información del especialista */}
+      {/* Información de la especialidad */}
       <View style={styles.card}>
-        <Text style={styles.label}>👤 Nombre:</Text>
-        <Text style={styles.value}>{especialista.Nombre}</Text>
+        <Text style={styles.label}>🏷️ Nombre:</Text>
+        <Text style={styles.value}>{especialidad.Nombre}</Text>
 
-        <Text style={styles.label}>👤 Apellido:</Text>
-        <Text style={styles.value}>{especialista.Apellido}</Text>
+        <Text style={styles.label}>📝 Descripción:</Text>
+        <Text style={styles.value}>{especialidad.Descripcion}</Text>
 
-        <Text style={styles.label}>🆔 Documento:</Text>
-        <Text style={styles.value}>{especialista.Documento}</Text>
-
-        <Text style={styles.label}>📞 Teléfono:</Text>
-        <Text style={styles.value}>{especialista.Telefono}</Text>
-
-        <Text style={styles.label}>✉️ Correo:</Text>
-        <Text style={styles.value}>{especialista.Email}</Text>
-
-        <Text style={styles.label}>🎓 Especialidad:</Text>
-        <Text style={styles.value}>{especialista.Especialidad}</Text>
-
-        <Text style={styles.label}>🏥 Consultorio:</Text>
-        <Text style={styles.value}>{especialista.Id_consultorio}</Text>
+        <Text style={styles.label}>👨‍⚕️ Médicos:</Text>
+        {especialidad.medicos && especialidad.medicos.length > 0 ? (
+          especialidad.medicos.map((medico) => (
+            <View key={medico.id} style={styles.medicoItem}>
+              <Text style={styles.medicoText}>ID: {medico.id} - Nombre: {medico.Nombre} {medico.Apellido}</Text>
+            </View>
+          ))
+        ) : (
+          <Text style={styles.value}>No hay médicos asignados a esta especialidad.</Text>
+        )}
       </View>
-
-      {/* Botones de acción */}
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() =>
-          navigation.navigate("EditarEspecialista", { especialista })
-        }
-      >
-        <Ionicons name="create-outline" size={22} color="#fff" />
-        <Text style={styles.buttonText}>Editar Especialista</Text>
-      </TouchableOpacity>
 
       <TouchableOpacity
         style={[styles.button, { backgroundColor: "#EF4444" }]}
@@ -95,5 +80,13 @@ const styles = StyleSheet.create({
   value: {
     fontSize: 16,
     color: "#11182",
+  },
+  medicoItem: {
+    marginTop: 5,
+    paddingLeft: 10,
+  },
+  medicoText: {
+    fontSize: 14,
+    color: "#374151",
   }
 });

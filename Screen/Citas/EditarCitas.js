@@ -1,27 +1,56 @@
-import React, { useState } from "react";
-import {View,TextInput,TouchableOpacity,Text,StyleSheet,ScrollView,Alert,} from "react-native";
+import React, { useState, useEffect } from "react";
+import { View, TextInput, TouchableOpacity, Text, StyleSheet, ScrollView, Alert } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 import { crearCita, editarCita } from "../../Src/Servicios/CitasService";
+import { useUser } from "../../Src/Contexts/UserContext";
 
 export default function EditarCita() {
   const navigation = useNavigation();
   const route = useRoute();
+  const { user, isMedico } = useUser();
 
   const cita = route.params?.cita;
 
+  // Si es médico y no hay cita (modo creación), redirigir
+  useEffect(() => {
+    if (isMedico() && !cita) {
+      Alert.alert("Acceso denegado", "Los médicos no pueden crear citas", [
+        { text: "OK", onPress: () => navigation.goBack() }
+      ]);
+    }
+  }, [isMedico, cita, navigation]);
+
   const [Fecha_cita, setFecha_cita] = useState(cita ? cita.Fecha_cita : "");
   const [Hora, setHora] = useState(cita ? cita.Hora : "");
-  const [idPaciente, setidPaciente] = useState(cita ? String (cita.idPaciente) : "");
-  const [idMedico, setidMedico] = useState(cita ? String (cita.idMedico) : "");
-  const [idRecepcionista, setidRecepcionista] = useState(cita ? String(cita.idRecepcionista) : "");
+  const [idPaciente, setidPaciente] = useState(cita ? String(cita.idPaciente) : "");
+  const [idMedico, setidMedico] = useState(cita ? String(cita.idMedico) : "");
+  const [idResepcionista, setidResepcionista] = useState(cita ? String(cita.idResepcionista) : "");
   const [Estado, setEstado] = useState(cita ? cita.Estado : "");
   const [loading, setLoading] = useState(false);
 
-  const esEdicion = !!cita; // true si estamos editando
+  const esEdicion = !!cita;
+
+  useEffect(() => {
+    if (!esEdicion && user) {
+      if (user.role === 'Recepcionista') {
+        setidResepcionista(String(user.id));
+      } else if (user.role === 'Medico') {
+        setidMedico(String(user.id));
+      } else if (user.role === 'Paciente') {
+        setidPaciente(String(user.id));
+      }
+    }
+  }, [user, esEdicion]);
 
   const handleGuardar = async () => {
-    if (!Fecha_cita || !Hora || !idPaciente || !idMedico || !idRecepcionista || !Estado) {
+    // Verificar si es médico intentando crear cita
+    if (isMedico() && !esEdicion) {
+      Alert.alert("Error", "Los médicos no pueden crear citas");
+      return;
+    }
+
+    if (!Fecha_cita || !Hora || !idPaciente || !idMedico || !idResepcionista || !Estado) {
       Alert.alert("Error", "Por favor, completa todos los campos.");
       return;
     }
@@ -34,7 +63,7 @@ export default function EditarCita() {
           Hora,
           idPaciente,
           idMedico,
-          idRecepcionista,
+          idResepcionista,
           Estado,
         });
       } else {
@@ -43,7 +72,7 @@ export default function EditarCita() {
           Hora,
           idPaciente,
           idMedico,
-          idRecepcionista,
+          idResepcionista,
           Estado,
         });
       }
@@ -51,7 +80,11 @@ export default function EditarCita() {
         Alert.alert("Éxito", esEdicion ? "Cita actualizada" : "Cita creada correctamente");
         navigation.goBack();
       } else {
-        Alert.alert("Error", JSON.stringify(result.message) || "No se pudo guardar la cita");
+        let mensaje = result.message;
+        if (typeof mensaje !== "string") {
+          mensaje = JSON.stringify(mensaje);
+        }
+        Alert.alert("Error", mensaje || "No se pudo guardar la cita");
       }
     } catch (error) {
       Alert.alert("Error", "No se pudo guardar la cita");
@@ -96,9 +129,10 @@ export default function EditarCita() {
         <TextInput
           style={styles.input}
           placeholder="ID Recepcionista"
-          value={idRecepcionista}
-          onChangeText={setidRecepcionista}
+          value={idResepcionista}
+          onChangeText={setidResepcionista}
           keyboardType="numeric"
+          editable={esEdicion || user?.role !== 'idRecepcionista'}
         />
         <TextInput
           style={styles.input}

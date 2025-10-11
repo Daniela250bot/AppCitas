@@ -1,15 +1,14 @@
 import { createStackNavigator } from "@react-navigation/stack";
 import { useContext } from "react";
-import { UserContext } from "../../Contexts/UserContext";
-
-import ListarCitas from "../../../Screen/Citas/ListarCitas";
+import { UserContext } from "../../Contexts/UserContext"; 
+import ListarCitas from "../../../Screen/Citas/ListarCitas";  
 import DetalleCita from "../../../Screen/Citas/DetalleCitas";
-import EditarCita from "../../../Screen/Citas/EditarCitas";
+import EditarCitas from "../../../Screen/Citas/EditarCitas";  
 
 const Stack = createStackNavigator();
 
 export default function CitasStack() {
-  const { isAdmin } = useContext(UserContext);
+  const { user, isPaciente, isMedico } = useContext(UserContext);
 
   return (
     <Stack.Navigator>
@@ -20,7 +19,7 @@ export default function CitasStack() {
           title: "Gestión de Citas",
           headerStyle: { backgroundColor: "#007AFF" },
           headerTintColor: "#fff",
-          headerTitleStyle: { fontWeight: "bold" }
+          headerTitleStyle: { fontWeight: "bold" },
         }}
       />
 
@@ -34,10 +33,12 @@ export default function CitasStack() {
         }}
       />
 
-      {isAdmin() && (
+      {/* Solo usuarios que no sean pacientes pueden acceder a la pantalla de edición */}
+      {/* Los médicos pueden editar pero no crear citas (validación dentro del componente) */}
+      {!isPaciente() && (
         <Stack.Screen
           name="EditarCitas"
-          component={EditarCita}
+          component={EditarCitas}
           options={{
             title: "Editar Cita",
             headerStyle: { backgroundColor: "#007AFF" },
@@ -46,5 +47,5 @@ export default function CitasStack() {
         />
       )}
     </Stack.Navigator>
-  )
+  );
 }

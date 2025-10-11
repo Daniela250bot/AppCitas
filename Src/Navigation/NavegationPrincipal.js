@@ -1,17 +1,131 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons, Feather, MaterialCommunityIcons } from "@expo/vector-icons";
+import { useUser } from "../Contexts/UserContext";
 import InicioStack from "./Stack/InicioStack";
 import PerfilesStack from "./Stack/PerfilStack";
 import ConfiguracionesStack from "./Stack/ConfiguracionStack";
+import CitasStack from "./Stack/CitasStack";
+import PacientesStack from "./Stack/PacientesStack";
+import MedicosStack from "./Stack/MedicosStack";
+import RecepcionistasStack from "./Stack/RecepcionistasStack";
+import EspecialidadesStack from "./Stack/EspecialidadesStack";
+import ConsultoriosStack from "./Stack/ConsultoriosStack";
 
 
 const Tab = createBottomTabNavigator();
 
 export default function NavegacionPrincipal() {
+  const { user } = useUser();
+
+  const getTabsForRole = (role) => {
+    const baseTabs = [
+      {
+        name: "Inicio",
+        component: InicioStack,
+        icon: "home",
+        label: "Inicio",
+      },
+      {
+        name: "Perfil",
+        component: PerfilesStack,
+        icon: "person-circle-outline",
+        label: "Perfil",
+      },
+      {
+        name: "Configuración",
+        component: ConfiguracionesStack,
+        icon: "settings-outline",
+        label: "Configuración",
+      },
+    ];
+
+    if (role === "Administrador") {
+      return [
+        ...baseTabs,
+        {
+          name: "Citas",
+          component: CitasStack,
+          icon: "calendar-outline",
+          label: "Citas",
+        },
+        {
+          name: "Pacientes",
+          component: PacientesStack,
+          icon: "people-outline",
+          label: "Pacientes",
+        },
+        {
+          name: "Médicos",
+          component: MedicosStack,
+          icon: "medkit-outline",
+          label: "Médicos",
+        },
+        {
+          name: "Recepcionistas",
+          component: RecepcionistasStack,
+          icon: "clipboard-outline",
+          label: "Recepcionistas",
+        },
+        {
+          name: "Especialidades",
+          component: EspecialidadesStack,
+          icon: "list-outline",
+          label: "Especialidades",
+        },
+        {
+          name: "Consultorios",
+          component: ConsultoriosStack,
+          icon: "business-outline",
+          label: "Consultorios",
+        },
+      ];
+    } else if (role === "Recepcionista") {
+      return [
+        ...baseTabs,
+        {
+          name: "Citas",
+          component: CitasStack,
+          icon: "calendar-outline",
+          label: "Citas",
+        },
+        {
+          name: "Pacientes",
+          component: PacientesStack,
+          icon: "people-outline",
+          label: "Pacientes",
+        },
+        {
+          name: "Médicos",
+          component: MedicosStack,
+          icon: "medkit-outline",
+          label: "Médicos",
+        },
+        {
+          name: "Consultorios",
+          component: ConsultoriosStack,
+          icon: "business-outline",
+          label: "Consultorios",
+        },
+      ];
+    } else {
+      // Médico, Paciente y otros
+      return [
+        ...baseTabs,
+        {
+          name: "Citas",
+          component: CitasStack,
+          icon: "calendar-outline",
+          label: "Citas",
+        },
+      ];
+    }
+  };
+
+  const tabs = getTabsForRole(user?.role);
   return (
     <Tab.Navigator
       screenOptions={{
-        // Estilos para la barra de pestañas en general
+        
         tabBarStyle: {
           backgroundColor: "#fefefe",
           borderTopColor: "#eee",
@@ -20,7 +134,7 @@ export default function NavegacionPrincipal() {
           paddingBottom: 5,
           paddingTop: 5,
         },
-        // colores de los iconos y texto de la pestaña
+   
         tabBarActiveTintColor: "#0A74DA",
         tabBarInactiveTintColor: "#555",
         tabBarLabelStyle: {
@@ -30,42 +144,20 @@ export default function NavegacionPrincipal() {
         },
       }}
     >
-      <Tab.Screen
-        name="Inicio"
-        component={InicioStack}
-        options={{
-          headerShown: false,
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="home" size={size} color={color} />
-          ),
-          tabBarLabel: "Inicio",
-        }}
-      />
-
-      <Tab.Screen
-        name="Perfil"
-        component={PerfilesStack}
-        options={{
-          headerShown: false,
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="person-circle-outline" size={size} color={color} />
-          ),
-          tabBarLabel: "Perfil",
-        }}
-      />
-
-      <Tab.Screen
-        name="Configuración"
-        component={ConfiguracionesStack}
-        options={{
-          headerShown: false,
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="settings-outline" size={size} color={color} />
-          ),
-          tabBarLabel: "Configuración",
-        }}
-      />
-      
+      {tabs.map((tab) => (
+        <Tab.Screen
+          key={tab.name}
+          name={tab.name}
+          component={tab.component}
+          options={{
+            headerShown: false,
+            tabBarIcon: ({ color, size }) => (
+              <Ionicons name={tab.icon} size={size} color={color} />
+            ),
+            tabBarLabel: tab.label,
+          }}
+        />
+      ))}
     </Tab.Navigator>
   );
 }

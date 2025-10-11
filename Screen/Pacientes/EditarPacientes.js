@@ -19,10 +19,10 @@ export default function EditarPaciente() {
   const [Genero, setGenero] = useState(paciente ? paciente.Genero : "");
   const [RH, setRH] = useState(paciente ? paciente.RH : "");
   const [Nacionalidad, setNacionalidad] = useState(paciente ? paciente.Nacionalidad : "");
-  const [Password, setPassword] = useState(""); // nueva variable de estado para la contraseña
+  const [Password, setPassword] = useState(""); 
   const [loading, setLoading] = useState(false);
 
-  const esEdicion = !!paciente; // es true si estamos editando
+  const esEdicion = !!paciente; 
 
   const handleGuardar = async () => {
     if (!Nombre || !Apellido || !Documento || !Telefono || !Email || !Fecha_nacimiento || !Genero || !RH || !Nacionalidad || !Password) {
@@ -61,7 +61,7 @@ export default function EditarPaciente() {
       }  
       if (result.success) {
         Alert.alert("Exito", esEdicion ? "Paciente actualizado" : "Paciente creado correctamente");
-        navegation.goBack(); // se devuelve a la pantalla anterior
+        navegation.goBack(); 
       } else {
        Alert.alert("Error", JSON.stringify(result.message) || "No se pudo guardar el médico");  
        }
