@@ -28,17 +28,15 @@ export default function DetalleConsultorio() {
         <Text style={styles.label}>🏷️ Nombre:</Text>
         <Text style={styles.value}>{consultorio.Nombre}</Text>
 
-        <Text style={styles.label}>📍 Ubicación:</Text>
+        <Text style={styles.label}>📍 Ciudad:</Text>
         <Text style={styles.value}>{consultorio.Ubicacion}</Text>
 
-        <Text style={styles.label}>🏢 Piso:</Text>
-        <Text style={styles.value}>{consultorio.Piso}</Text>
+        <Text style={styles.label}>🏢 Direccion:</Text>
+        <Text style={styles.value}>{consultorio.Direccion}</Text>
 
         <Text style={styles.label}>☎️ Teléfono:</Text>
         <Text style={styles.value}>{consultorio.Telefono}</Text>
 
-        <Text style={styles.label}>🔢 Capacidad:</Text>
-        <Text style={styles.value}>{consultorio.Capacidad}</Text>
       </View>
 
       {/* Botones de acción */}

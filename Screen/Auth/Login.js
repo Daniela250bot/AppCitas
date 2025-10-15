@@ -19,9 +19,7 @@ export default function Login({ navigation }) {
         // 🔹 Guardamos al usuario en el contexto
         updateUser(result.user);
 
-        Alert.alert("Éxito", "Inicio de sesión exitoso", [
-          { text: "Ok", onPress: () => navigation.replace("Inicio") },
-        ]);
+        Alert.alert("Éxito", "Inicio de sesión exitoso");
       } else {
         Alert.alert(
           "Error de Login",

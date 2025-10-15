@@ -40,27 +40,31 @@ export default function PacienteCard({ paciente, onEdit, onDelete, onPress }) {
 
       {/* Botones Editar / Eliminar */}
       <View style={styles.actions}>
-        <Pressable
-          onPress={onEdit}
-          style={({ pressed }) => [
-            styles.button,
-            styles.editBtn,
-            pressed && styles.pressed,
-          ]}
-        >
-          <Ionicons name="create-outline" size={18} color="#fff" />
-        </Pressable>
+        {onEdit && (
+          <Pressable
+            onPress={onEdit}
+            style={({ pressed }) => [
+              styles.button,
+              styles.editBtn,
+              pressed && styles.pressed,
+            ]}
+          >
+            <Ionicons name="create-outline" size={18} color="#fff" />
+          </Pressable>
+        )}
 
-        <Pressable
-          onPress={onDelete}
-          style={({ pressed }) => [
-            styles.button,
-            styles.deleteBtn,
-            pressed && styles.pressed,
-          ]}
-        >
-          <Ionicons name="trash-outline" size={18} color="#fff" />
-        </Pressable>
+        {onDelete && (
+          <Pressable
+            onPress={onDelete}
+            style={({ pressed }) => [
+              styles.button,
+              styles.deleteBtn,
+              pressed && styles.pressed,
+            ]}
+          >
+            <Ionicons name="trash-outline" size={18} color="#fff" />
+          </Pressable>
+        )}
       </View>
     </Pressable>
   );

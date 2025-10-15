@@ -82,9 +82,42 @@ export default function EditarCita() {
       } else {
         let mensaje = result.message;
         if (typeof mensaje !== "string") {
-          mensaje = JSON.stringify(mensaje);
+          // Manejar errores específicos del backend
+          if (mensaje && typeof mensaje === 'object') {
+            if (mensaje.idMedico && mensaje.idMedico.includes("The selected id medico is invalid.")) {
+              Alert.alert("Error", "El ID del médico seleccionado no es válido.");
+            } else if (mensaje.Fecha_cita && mensaje.Fecha_cita.includes("The fecha cita field must be a valid date.")) {
+              Alert.alert("Error", "La fecha de la cita debe ser una fecha válida.");
+            } else if (mensaje.idPaciente && mensaje.idPaciente.includes("The selected id paciente is invalid.")) {
+              Alert.alert("Error", "El ID del paciente seleccionado no es válido.");
+            } else if (mensaje.idResepcionista && mensaje.idResepcionista.includes("The selected id resepcionista is invalid.")) {
+              Alert.alert("Error", "El ID del recepcionista seleccionado no es válido.");
+            } else if (mensaje.Hora && mensaje.Hora.some(err => err.includes("The hora field must be a valid time.") || err.includes("invalid"))) {
+              Alert.alert("Error", "La hora de la cita debe ser una hora válida en formato HH:MM.");
+            } else if (mensaje.Estado && mensaje.Estado.some(err => err.includes("invalid") || err.includes("required"))) {
+              Alert.alert("Error", "El estado de la cita es inválido o requerido.");
+            } else if (mensaje.Fecha_cita && mensaje.Fecha_cita.some(err => err.includes("required"))) {
+              Alert.alert("Error", "La fecha de la cita es requerida.");
+            } else if (mensaje.Hora && mensaje.Hora.some(err => err.includes("required"))) {
+              Alert.alert("Error", "La hora de la cita es requerida.");
+            } else if (mensaje.idPaciente && mensaje.idPaciente.some(err => err.includes("required"))) {
+              Alert.alert("Error", "El ID del paciente es requerido.");
+            } else if (mensaje.idMedico && mensaje.idMedico.some(err => err.includes("required"))) {
+              Alert.alert("Error", "El ID del médico es requerido.");
+            } else if (mensaje.idResepcionista && mensaje.idResepcionista.some(err => err.includes("required"))) {
+              Alert.alert("Error", "El ID del recepcionista es requerido.");
+            } else if (mensaje.Estado && mensaje.Estado.some(err => err.includes("required"))) {
+              Alert.alert("Error", "El estado de la cita es requerido.");
+            } else {
+              // Para otros errores no especificados (como errores de servidor o validaciones adicionales)
+              Alert.alert("Error", JSON.stringify(mensaje) || "Ocurrió un error inesperado al guardar la cita.");
+            }
+          } else {
+            Alert.alert("Error", mensaje || "No se pudo guardar la cita");
+          }
+        } else {
+          Alert.alert("Error", mensaje || "No se pudo guardar la cita");
         }
-        Alert.alert("Error", mensaje || "No se pudo guardar la cita");
       }
     } catch (error) {
       Alert.alert("Error", "No se pudo guardar la cita");

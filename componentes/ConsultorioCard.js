@@ -34,6 +34,15 @@ export default function ConsultorioCard({ consultorio, onEdit, onDelete, onPress
           <Ionicons name="call-outline" size={16} color="#555" />
           <Text style={styles.detalle}> {consultorio?.Telefono ?? "N/A"}</Text>
         </View>
+
+        {consultorio?.medicos && consultorio.medicos.length > 0 && (
+          <View style={styles.row}>
+            <Ionicons name="people-outline" size={16} color="#555" />
+            <Text style={styles.detalle}>
+              Médicos: {consultorio.medicos.map(medico => `${medico.Nombre} ${medico.Apellido}`).join(', ')}
+            </Text>
+          </View>
+        )}
       </View>
 
       {/* Botones Editar / Eliminar */}

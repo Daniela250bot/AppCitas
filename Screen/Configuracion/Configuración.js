@@ -1,9 +1,12 @@
-import { View, Text, Alert, StyleSheet, Switch, TouchableOpacity } from "react-native";
+import { View, Text, Alert, StyleSheet, Switch, TouchableOpacity, Button } from "react-native";
 import BottonComponent from "../../componentes/BottoComponent";
 import { logoutUser } from "../../Src/Servicios/AuthService";
 import { useUser } from "../../Src/Contexts/UserContext";
 import { useTheme } from "../../Src/Contexts/ThemeContext";
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
+import * as Notifications from 'expo-notifications';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useFocusEffect } from "@react-navigation/native";
 
 export default function Configuracion({ navigation }) {
     const { updateUser } = useUser();
@@ -32,6 +35,69 @@ export default function Configuracion({ navigation }) {
         ]);
     };
 
+    //cons notificaciones 
+    const [permisosNotificaciones, setPermisoNotificaciones] = useState(false); // estado inicial falso 
+    const [Loading, setLoading] = useState(true);
+
+    const checkPermisos = async () => {
+        const { status } = await Notifications.getPermissionsAsync();
+        const preferencia = await AsyncStorage.getItem('notificaciones_activas');
+        setPermisoNotificaciones(status === 'granted' && preferencia === 'true'); //si se dan permisos y esta activa se muestra la notificación
+        setLoading(false);
+    };
+    useEffect(() => {
+        checkPermisos();
+    }, []);
+    useFocusEffect(
+        useCallback(() => {
+        checkPermisos();
+        }, [])
+    );
+
+    const toggleSwitch = async (valor) => {
+        if(valor){
+            const { status } =await Notifications.requestPermissionsAsync();
+            if(status === 'granted'){
+                await AsyncStorage.setItem('notificaciones_activas', 'true');
+                setPermisoNotificaciones(true);
+                Alert.alert('Permiso concedido');
+            }else{
+                await AsyncStorage.setItem('notificaciones_activas', 'false');
+                setPermisoNotificaciones(false);
+                Alert.alert('Permiso denegado');
+            }
+        }else{
+            await AsyncStorage.setItem('notificaciones_activas', 'false');
+                setPermisoNotificaciones(false);
+                Alert.alert('Notificaciones desactivadas'); 
+        }
+    }
+
+    const programarNotificacion = async () => {
+        const { status } = await Notifications.getPermissionsAsync();
+        const preferencia = await AsyncStorage.getItem('notificaciones_activas');
+        if(status!=='granted' || preferencia !== 'true'){
+            Alert.alert('No tienes permisos para recibir notificaciones');
+            return;
+        }
+
+        const trigger = new Date(Date.now() + 2 * 60 * 1000); //2 minutos apartir de ahora 
+
+        try {
+            await Notifications.scheduleNotificationAsync({
+                content: {
+                    title: "Notificaciónn programada ",
+                    body: 'Esta es una notificacion programada para dos minutos despue.  '
+                },
+                trigger,
+            });
+            Alert.alert('notificación programada para 2 minutos despues'); 
+        } catch (error) {
+            Alert.alert('Error al programar la notificación');
+        }
+    }
+
+
     return (
         <View style={styles.container}>
             <Text style={styles.title}>⚙️ Configuración</Text>
@@ -55,15 +121,16 @@ export default function Configuracion({ navigation }) {
                 </View>
             </View>
 
-            {/* Card Notificaciones */}
-            <View style={styles.settingCard}>
-                <Text style={styles.settingText}>Notificaciones</Text>
-                <Switch
-                    value={notificationsEnabled}
-                    onValueChange={handleNotificationsToggle}
-                    trackColor={{ false: "#ccc", true: "#34D399" }}
-                    thumbColor={notificationsEnabled ? "#059669" : "#f4f3f4"}
+            {/*Notificaciones */}
+            <View style={{ flex: 1, justifyContent: "center", alignItems: "center"}}>
+                <Text style={{ fontSize: 18, marginBottom: 10}}> 
+                    Notificaciones: {permisosNotificaciones ?'Activadas' : 'Desactivadas'} 
+                    </Text>
+                <Switch 
+                value={permisosNotificaciones} 
+                onValueChange={toggleSwitch} 
                 />
+                <Button title="Programar Notificación en 2 minuntos"onPress={programarNotificacion}/>
             </View>
 
             <BottonComponent
@@ -138,4 +205,24 @@ const styles = StyleSheet.create({
         width: "70%",
         borderRadius: 10,
     },
+    programarButton: {
+        marginTop: 15,
+        backgroundColor: "#0A74DA",
+        padding: 10,
+        borderRadius: 8,
+        alignItems: "center",
+    },
+    programarText: {
+        color: "#fff",
+        fontSize: 16,
+        fontWeight: "bold",
+    },
 });
+
+
+
+
+
+
+
+

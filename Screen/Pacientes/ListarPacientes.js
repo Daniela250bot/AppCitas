@@ -85,7 +85,7 @@ export default function ListarPacientes (){
           renderItem={({item}) => (
             <PacientesCard
               paciente={item}
-              onEdit={isMedico() ? null : () => handleEditar(item)}
+              onEdit={() => handleEditar(item)}
               onDelete={isMedico() ? null : () => handleEliminar(item.id)}
               onPress={() => navegation.navigate("DetallePaciente", { paciente: item })} // abre detalle
             />
@@ -96,7 +96,7 @@ export default function ListarPacientes (){
 
         {!isMedico() && (
           <TouchableOpacity style={styles.botonCrear} onPress={handleCrear}>
-            <Text style={styles.textBotton}>+Nuevo Paciente</Text>
+            <Text style={styles.textBotton}>Nuevo Paciente</Text>
           </TouchableOpacity>
         )}
       </View>

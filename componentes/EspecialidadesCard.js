@@ -22,6 +22,15 @@ export default function EspecialidadesCard({ especialidad, onEdit, onDelete, onP
 
         <Text style={styles.detalle}>{especialidad?.Descripcion ?? "Sin descripción"}</Text>
 
+        {especialidad?.medicos && especialidad.medicos.length > 0 && (
+          <View style={styles.row}>
+            <Ionicons name="people-outline" size={16} color="#555" />
+            <Text style={styles.detalle}>
+              Médicos: {especialidad.medicos.map(medico => `${medico.Nombre} ${medico.Apellido}`).join(', ')}
+            </Text>
+          </View>
+        )}
+
       </View>
 
       {/* Botones Editar / Eliminar */}
