@@ -41,29 +41,26 @@ export default function DetalleMedico() {
         <Text style={styles.value}>{medico.Email}</Text>
 
         <Text style={styles.label}>🎓 Especialidad:</Text>
-        <Text style={styles.value}>{medico.Especialidad}</Text>
+        <Text style={styles.value}>{medico.idEspecialidad}</Text>
 
         <Text style={styles.label}>🏥 Consultorio:</Text>
-        <Text style={styles.value}>{medico.Id_consultorio}</Text>
+        <Text style={styles.value}>{medico.idConsultorio}</Text>
       </View>
 
       {/* Botones de acción */}
       <TouchableOpacity
         style={styles.button}
-        onPress={() => navigation.navigate("EditarMedico", { medico })}
+        onPress={() => navigation.navigate("EditarMedicos", { medico })}
       >
         <Ionicons name="create-outline" size={22} color="#fff" />
         <Text style={styles.buttonText}>Editar Médico</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity
-        style={[styles.button, { backgroundColor: "#EF4444" }]}
-        onPress={() => navigation.goBack()}
-      >
-        <Ionicons name="arrow-back-outline" size={22} color="#fff" />
-        <Text style={styles.buttonText}>Volver</Text>
-      </TouchableOpacity>
-    </ScrollView>
+     <TouchableOpacity style={[styles.button, { backgroundColor: "#EF4444" }]} onPress={() => navigation.goBack()}>
+             <Ionicons name="arrow-back-outline" size={22} color="#fff" />
+             <Text style={styles.buttonText}>Volver</Text>
+           </TouchableOpacity>
+         </ScrollView>
   );
 }
 

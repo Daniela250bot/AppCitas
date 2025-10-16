@@ -44,7 +44,7 @@ export default function CitasCard({ cita, onEdit, onDelete, onPress }) {
 
          <View style={styles.row}>
            <Ionicons name="calendar-outline" size={16} color="#555" />
-           <Text style={styles.detalle}> {cita?.Fecha_cita ?? "N/A"}</Text>
+           <Text style={styles.detalle}>  {cita?.Fecha_cita ?? "N/A"}</Text>
          </View>
 
          <View style={styles.row}>

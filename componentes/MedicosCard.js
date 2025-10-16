@@ -39,13 +39,13 @@ export default function MedicosCard({ medico, onEdit, onDelete, onPress }) {
 
         <View style={styles.row}>
           <Ionicons name="medkit-outline" size={16} color="#555" />
-          <Text style={styles.detalle}> Especialidad: {medico?.especialidad?.Nombre ?? "N/A"}</Text>
+          <Text style={styles.detalle}> Especialidad: {medico?.idEspecialidad?.Nombre ?? "N/A"}</Text>
         </View>
 
 
         <View style={styles.row}>
           <Ionicons name="business-outline" size={16} color="#555" />
-          <Text style={styles.detalle}> Consultorio: {medico?.consultorio?.Nombre ?? "N/A"}</Text>
+          <Text style={styles.detalle}> Consultorio: {medico?.idConsultorio?.Nombre ?? "N/A"}</Text>
         </View>
       </View>
 

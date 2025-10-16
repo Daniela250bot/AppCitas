@@ -2,7 +2,7 @@
   "expo": {
     "name": "AppCitas",
     "slug": "AppCitas",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -16,14 +16,24 @@
       "supportsTablet": true
     },
     "android": {
+      "useNextNotificationsApi": true,
+      "intentFilters": [],
+      "permissions": [],
+      "usesCleartextTraffic": true,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "package": "com.iwhosdanis.AppCitas"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "5e041a7d-9686-40fa-b08c-16316c9bfe99"
+      }
     }
   }
 }
