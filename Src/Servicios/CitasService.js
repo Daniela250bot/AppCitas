@@ -51,3 +51,16 @@ export const editarCita = async (id, data) => {
     };
   }
 };
+
+export const verificarDisponibilidad = async (idMedico) => {
+  try {
+    const response = await api.get(`/verificarDisponibilidad/${idMedico}`);
+    return { success: true, data: response.data };
+  } catch (error) {
+    console.error("Error al verificar disponibilidad:", error.response ? error.response.data : error.message);
+    return {
+      success: false,
+      message: error.response ? error.response.data : "Error de conexion",
+    };
+  }
+};

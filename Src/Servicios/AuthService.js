@@ -64,3 +64,29 @@ export const getUserData = async () => {
     return null;
   }
 };
+
+export const recuperarPassword = async (email) => {
+  try {
+    const response = await api.post('/recuperar-password', { email });
+    return { success: true, data: response.data };
+  } catch (error) {
+    console.error("Error al recuperar contraseña:", error.response ? error.response.data : error.message);
+    return {
+      success: false,
+      message: error.response ? error.response.data : "Error de conexión",
+    };
+  }
+};
+
+export const restablecerPassword = async (token, password) => {
+  try {
+    const response = await api.post('/restablecer-password', { token, password });
+    return { success: true, data: response.data };
+  } catch (error) {
+    console.error("Error al restablecer contraseña:", error.response ? error.response.data : error.message);
+    return {
+      success: false,
+      message: error.response ? error.response.data : "Error de conexión",
+    };
+  }
+};

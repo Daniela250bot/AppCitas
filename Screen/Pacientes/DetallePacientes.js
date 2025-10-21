@@ -41,7 +41,7 @@ export default function DetallePaciente() {
         <Text style={styles.value}>{paciente.Email}</Text>
 
         <Text style={styles.label}>🎂 Fecha de Nacimiento:</Text>
-        <Text style={styles.value}>{paciente.FechaNacimiento}</Text>
+        <Text style={styles.value}>{paciente.Fecha_nacimiento}</Text>
 
         <Text style={styles.label}>⚧ Género:</Text>
         <Text style={styles.value}>{paciente.Genero}</Text>

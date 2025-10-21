@@ -41,10 +41,10 @@ export default function DetalleMedico() {
         <Text style={styles.value}>{medico.Email}</Text>
 
         <Text style={styles.label}>🎓 Especialidad:</Text>
-        <Text style={styles.value}>{medico.idEspecialidad}</Text>
+        <Text style={styles.value}>{medico.especialidad ? medico.especialidad.Nombre : medico.idEspecialidad}</Text>
 
         <Text style={styles.label}>🏥 Consultorio:</Text>
-        <Text style={styles.value}>{medico.idConsultorio}</Text>
+        <Text style={styles.value}>{medico.consultorio ? medico.consultorio.Nombre : medico.idConsultorio}</Text>
       </View>
 
       {/* Botones de acción */}

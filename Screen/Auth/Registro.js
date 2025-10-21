@@ -1,9 +1,20 @@
-import React, { useState } from "react";
-import { View, Text, TextInput, StyleSheet, Alert, ScrollView, TouchableOpacity } from "react-native";
+import React, { useState, useEffect } from "react";
+import {
+  View,
+  Text,
+  TextInput,
+  StyleSheet,
+  Alert,
+  ScrollView,
+  TouchableOpacity,
+  Image,
+} from "react-native";
 import BottonComponent from "../../componentes/BottoComponent";
 import { registerUser } from "../../Src/Servicios/AuthService";
+import { useUser } from "../../Src/Contexts/UserContext";
 
 export default function Registro({ navigation }) {
+  const { user, isRecepcionista } = useUser();
   const [name, setName] = useState("");
   const [apellido, setApellido] = useState("");
   const [documento, setDocumento] = useState("");
@@ -21,8 +32,15 @@ export default function Registro({ navigation }) {
   const [selectedRole, setSelectedRole] = useState("");
   const [loading, setLoading] = useState(false);
 
+  useEffect(() => {
+    if (!isRecepcionista()) {
+      Alert.alert("Acceso Denegado", "Solo los recepcionistas pueden registrar usuarios.", [
+        { text: "OK", onPress: () => navigation.goBack() },
+      ]);
+    }
+  }, [isRecepcionista, navigation]);
+
   const handleRegister = async () => {
-    // Validación básica
     if (!name.trim()) {
       Alert.alert("⚠️ Error", "El nombre es obligatorio");
       return;
@@ -31,7 +49,6 @@ export default function Registro({ navigation }) {
       Alert.alert("⚠️ Error", "El email es obligatorio");
       return;
     }
-    // Validar formato de email
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       Alert.alert("⚠️ Error", "El formato del email no es válido");
@@ -69,7 +86,7 @@ export default function Registro({ navigation }) {
       idConsultorio,
       idEspecialidad,
       password,
-      role: selectedRole
+      role: selectedRole,
     };
 
     try {
@@ -83,7 +100,9 @@ export default function Registro({ navigation }) {
         if (result.message && typeof result.message === "object") {
           if (result.message.errors) {
             const errors = result.message.errors;
-            const errorList = Object.keys(errors).map(key => `${key}: ${errors[key].join(', ')}`).join('\n');
+            const errorList = Object.keys(errors)
+              .map((key) => `${key}: ${errors[key].join(", ")}`)
+              .join("\n");
             errorMessage = errorList;
           } else if (result.message.message) {
             errorMessage = result.message.message;
@@ -103,79 +122,203 @@ export default function Registro({ navigation }) {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.titulo}>📝 Registro de Usuario</Text>
-
-      
-      <Text style={styles.label}>Selecciona tu Rol:</Text>
-      <View style={styles.roleButtons}>
-        <TouchableOpacity
-          style={[styles.roleButton, selectedRole === 'Paciente' && styles.selectedRole]}
-          onPress={() => setSelectedRole('Paciente')}
-        >
-          <Text style={[styles.roleText, selectedRole === 'Paciente' && styles.selectedRoleText]}>𝙿𝚊𝚌𝚒𝚎𝚗𝚝𝚎</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.roleButton, selectedRole === 'Medico' && styles.selectedRole]}
-          onPress={() => setSelectedRole('Medico')}
-        >
-          <Text style={[styles.roleText, selectedRole === 'Medico' && styles.selectedRoleText]}>𝙼𝚎𝚍𝚒𝚌𝚘 </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.roleButton, selectedRole === 'Recepcionista' && styles.selectedRole]}
-          onPress={() => setSelectedRole('Recepcionista')}
-        >
-          <Text style={[styles.roleText, selectedRole === 'Recepcionista' && styles.selectedRoleText]}>𝚁𝚎𝚌𝚎𝚙𝚌𝚒𝚘𝚗𝚒𝚜𝚝𝚊</Text>
-        </TouchableOpacity>
-        
+      {/* 🏥 Encabezado con logo */}
+      <View style={styles.header}>
+        <Image
+          source={{
+            uri: "https://cdn-icons-png.flaticon.com/512/2966/2966485.png",
+          }}
+          style={styles.logo}
+        />
+        <Text style={styles.appTitle}>Centro Médico VitalCare</Text>
+        <Text style={styles.subTitle}>Tu salud en buenas manos 💙</Text>
       </View>
 
-      <TextInput style={styles.input} placeholder="Nombre *" value={name} onChangeText={setName} />
-      <TextInput style={styles.input} placeholder="Correo *" value={email} onChangeText={setEmail} keyboardType="email-address" autoCapitalize="none" />
-      <TextInput style={styles.input} placeholder="Contraseña *" secureTextEntry value={password} onChangeText={setPassword} />
-      <TextInput style={styles.input} placeholder="Confirmar Contraseña *" secureTextEntry value={confirmPassword} onChangeText={setConfirmPassword} />
+      <View style={styles.card}>
+        <Text style={styles.titulo}>🩺 Registro de Usuario</Text>
 
+        <Text style={styles.label}>Selecciona el Rol a Registrar:</Text>
+        <View style={styles.roleButtons}>
+          <TouchableOpacity
+            style={[
+              styles.roleButton,
+              selectedRole === "Paciente" && styles.selectedRole,
+            ]}
+            onPress={() => setSelectedRole("Paciente")}
+          >
+            <Text
+              style={[
+                styles.roleText,
+                selectedRole === "Paciente" && styles.selectedRoleText,
+              ]}
+            >
+              Paciente
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[
+              styles.roleButton,
+              selectedRole === "Medico" && styles.selectedRole,
+            ]}
+            onPress={() => setSelectedRole("Medico")}
+          >
+            <Text
+              style={[
+                styles.roleText,
+                selectedRole === "Medico" && styles.selectedRoleText,
+              ]}
+            >
+              Médico
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[
+              styles.roleButton,
+              selectedRole === "Recepcionista" && styles.selectedRole,
+            ]}
+            onPress={() => setSelectedRole("Recepcionista")}
+          >
+            <Text
+              style={[
+                styles.roleText,
+                selectedRole === "Recepcionista" && styles.selectedRoleText,
+              ]}
+            >
+              Recepcionista
+            </Text>
+          </TouchableOpacity>
+        </View>
 
-      {selectedRole && (
-        <>
-          <TextInput style={styles.input} placeholder="Apellido" value={apellido} onChangeText={setApellido} />
-          <TextInput style={styles.input} placeholder="Teléfono" value={telefono} onChangeText={setTelefono} keyboardType="phone-pad" />
+        <TextInput
+          style={styles.input}
+          placeholder="Nombre *"
+          value={name}
+          onChangeText={setName}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Correo *"
+          value={email}
+          onChangeText={setEmail}
+          keyboardType="email-address"
+          autoCapitalize="none"
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Contraseña *"
+          secureTextEntry
+          value={password}
+          onChangeText={setPassword}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Confirmar Contraseña *"
+          secureTextEntry
+          value={confirmPassword}
+          onChangeText={setConfirmPassword}
+        />
 
-          {selectedRole === 'Paciente' && (
-            <>
-              <TextInput style={styles.input} placeholder="Documento" value={documento} onChangeText={setDocumento} />
-              <TextInput style={styles.input} placeholder="Fecha de nacimiento (YYYY-MM-DD)" value={fechaNacimiento} onChangeText={setFechaNacimiento} />
-              <TextInput style={styles.input} placeholder="Género" value={genero} onChangeText={setGenero} />
-              <TextInput style={styles.input} placeholder="RH" value={rh} onChangeText={setRh} />
-              <TextInput style={styles.input} placeholder="Nacionalidad" value={nacionalidad} onChangeText={setNacionalidad} />
-            </>
-          )}
+        {selectedRole && (
+          <>
+            <TextInput
+              style={styles.input}
+              placeholder="Apellido"
+              value={apellido}
+              onChangeText={setApellido}
+            />
+            <TextInput
+              style={styles.input}
+              placeholder="Teléfono"
+              value={telefono}
+              onChangeText={setTelefono}
+              keyboardType="phone-pad"
+            />
 
-          {selectedRole === 'Medico' && (
-            <>
-              <TextInput style={styles.input} placeholder="Documento" value={documento} onChangeText={setDocumento} />
-              <TextInput style={styles.input} placeholder="ID Consultorio" value={idConsultorio} onChangeText={setIdConsultorio} keyboardType="numeric" />
-              <TextInput style={styles.input} placeholder="ID Especialidad" value={idEspecialidad} onChangeText={setIdEspecialidad} keyboardType="numeric" />
-            </>
-          )}
+            {selectedRole === "Paciente" && (
+              <>
+                <TextInput
+                  style={styles.input}
+                  placeholder="Documento"
+                  value={documento}
+                  onChangeText={setDocumento}
+                />
+                <TextInput
+                  style={styles.input}
+                  placeholder="Fecha de nacimiento (YYYY-MM-DD)"
+                  value={fechaNacimiento}
+                  onChangeText={setFechaNacimiento}
+                />
+                <TextInput
+                  style={styles.input}
+                  placeholder="Género"
+                  value={genero}
+                  onChangeText={setGenero}
+                />
+                <TextInput
+                  style={styles.input}
+                  placeholder="RH"
+                  value={rh}
+                  onChangeText={setRh}
+                />
+                <TextInput
+                  style={styles.input}
+                  placeholder="Nacionalidad"
+                  value={nacionalidad}
+                  onChangeText={setNacionalidad}
+                />
+              </>
+            )}
 
-          {selectedRole === 'Recepcionista' && (
-            <TextInput style={styles.input} placeholder="Turno" value={turno} onChangeText={setTurno} />
-          )}
-        </>
-      )}
+            {selectedRole === "Medico" && (
+              <>
+                <TextInput
+                  style={styles.input}
+                  placeholder="Documento"
+                  value={documento}
+                  onChangeText={setDocumento}
+                />
+                <TextInput
+                  style={styles.input}
+                  placeholder="ID Consultorio"
+                  value={idConsultorio}
+                  onChangeText={setIdConsultorio}
+                  keyboardType="numeric"
+                />
+                <TextInput
+                  style={styles.input}
+                  placeholder="ID Especialidad"
+                  value={idEspecialidad}
+                  onChangeText={setIdEspecialidad}
+                  keyboardType="numeric"
+                />
+              </>
+            )}
 
-      <BottonComponent 
-        title={loading ? "⏳ Registrando..." : "✅ Registrarse"} 
-        
-        onPress={handleRegister} 
-        disabled={loading} 
-      />
+            {selectedRole === "Recepcionista" && (
+              <TextInput
+                style={styles.input}
+                placeholder="Turno"
+                value={turno}
+                onChangeText={setTurno}
+              />
+            )}
+          </>
+        )}
 
-      <BottonComponent
-        title="🔑 ¿Ya tienes cuenta? Inicia sesión"
-        onPress={() => navigation.navigate("Login")}
-        style={{ backgroundColor: "#0A2647" }}
-      />
+        <View style={{ marginTop: 10 }}>
+          <BottonComponent
+            title={loading ? "⏳ Registrando..." : "✅ Registrarse"}
+            onPress={handleRegister}
+            disabled={loading}
+          />
+
+          <BottonComponent
+            title="🔑 ¿Ya tienes cuenta? Inicia sesión"
+            onPress={() => navigation.navigate("Login")}
+            style={{ backgroundColor: "#223A66" }}
+          />
+        </View>
+      </View>
     </ScrollView>
   );
 }
@@ -183,64 +326,94 @@ export default function Registro({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
-    backgroundColor: "#F5F9FF",
+    backgroundColor: "#EAF0F9",
     justifyContent: "center",
     alignItems: "center",
+    padding: 25,
+  },
+  header: {
+    alignItems: "center",
+    marginBottom: 15,
+  },
+  logo: {
+    width: 80,
+    height: 80,
+    marginBottom: 10,
+  },
+  appTitle: {
+    fontSize: 22,
+    fontWeight: "bold",
+    color: "#1E3C72",
+    textAlign: "center",
+  },
+  subTitle: {
+    fontSize: 14,
+    color: "#4F6FA3",
+    textAlign: "center",
+    marginBottom: 20,
+  },
+  card: {
+    width: "100%",
+    backgroundColor: "#FFFFFF",
+    borderRadius: 16,
     padding: 20,
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowOffset: { width: 0, height: 4 },
+    shadowRadius: 8,
+    elevation: 5,
+    marginBottom: 40,
   },
   titulo: {
-    fontSize: 26,
+    fontSize: 24,
     fontWeight: "bold",
-    color: "#0A74DA",
+    color: "#223A66",
     marginBottom: 20,
     textAlign: "center",
   },
-  input: {
-    width: "100%",
-    padding: 14,
-    borderWidth: 1,
-    borderColor: "#d0d7e2",
-    borderRadius: 12,
-    marginBottom: 15,
-    backgroundColor: "#fff",
-    fontSize: 15,
-    shadowColor: "#000",
-    shadowOpacity: 0.05,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 4,
-    elevation: 2,
-  },
   label: {
     fontSize: 16,
-    fontWeight: "bold",
-    color: "#0A74DA",
+    fontWeight: "600",
+    color: "#4469B0",
     marginBottom: 10,
     textAlign: "center",
   },
   roleButtons: {
     flexDirection: "row",
-    justifyContent: "space-around",
-    marginBottom: 20,
+    justifyContent: "space-between",
+    marginBottom: 25,
   },
   roleButton: {
-    padding: 12,
-    borderWidth: 1,
-    borderColor: "#0A74DA",
-    borderRadius: 8,
-    backgroundColor: "#fff",
     flex: 1,
+    paddingVertical: 12,
+    borderRadius: 10,
     marginHorizontal: 5,
+    backgroundColor: "#F0F4FA",
+    borderWidth: 1,
+    borderColor: "#B8C5E0",
     alignItems: "center",
   },
   selectedRole: {
-    backgroundColor: "#0A74DA",
+    backgroundColor: "#4469B0",
+    borderColor: "#294B8C",
   },
   roleText: {
-    fontSize: 14,
+    color: "#223A66",
     fontWeight: "bold",
-    color: "#0A74DA",
+    fontSize: 14,
   },
   selectedRoleText: {
     color: "#fff",
+  },
+  input: {
+    width: "100%",
+    padding: 14,
+    borderWidth: 1,
+    borderColor: "#D2DAE6",
+    borderRadius: 10,
+    backgroundColor: "#F9FBFF",
+    marginBottom: 15,
+    fontSize: 15,
+    color: "#2A2A2A",
   },
 });

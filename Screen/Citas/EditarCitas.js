@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import { View, TextInput, TouchableOpacity, Text, StyleSheet, ScrollView, Alert } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
-import { crearCita, editarCita } from "../../Src/Servicios/CitasService";
+import { Calendar } from "react-native-calendars";
+import { crearCita, editarCita, verificarDisponibilidad } from "../../Src/Servicios/CitasService";
 import { useUser } from "../../Src/Contexts/UserContext";
 
 export default function EditarCita() {
@@ -28,6 +29,8 @@ export default function EditarCita() {
   const [idResepcionista, setidResepcionista] = useState(cita ? String(cita.idResepcionista) : "");
   const [Estado, setEstado] = useState(cita ? cita.Estado : "");
   const [loading, setLoading] = useState(false);
+  const [markedDates, setMarkedDates] = useState({});
+  const [showCalendar, setShowCalendar] = useState(false);
 
   const esEdicion = !!cita;
 
@@ -42,6 +45,35 @@ export default function EditarCita() {
       }
     }
   }, [user, esEdicion]);
+
+  useEffect(() => {
+    if (!esEdicion && idMedico) {
+      loadDisponibilidad();
+    }
+  }, [idMedico, esEdicion]);
+
+  const loadDisponibilidad = async () => {
+    try {
+      const result = await verificarDisponibilidad(idMedico);
+      if (result.success) {
+        const marked = {};
+        result.data.forEach(item => {
+          marked[item.fecha] = {
+            selected: true,
+            selectedColor: item.disponible ? '#10B981' : '#EF4444'
+          };
+        });
+        setMarkedDates(marked);
+      }
+    } catch (error) {
+      console.error('Error cargando disponibilidad:', error);
+    }
+  };
+
+  const handleDayPress = (day) => {
+    setFecha_cita(day.dateString);
+    setShowCalendar(false);
+  };
 
   const handleGuardar = async () => {
     // Verificar si es médico intentando crear cita
@@ -133,12 +165,29 @@ export default function EditarCita() {
           {esEdicion ? "Editar Cita Médica" : "Nueva Cita Médica"}
         </Text>
 
-        <TextInput
+        <TouchableOpacity
           style={styles.input}
-          placeholder="Fecha (YYYY-MM-DD)"
-          value={Fecha_cita}
-          onChangeText={setFecha_cita}
-        />
+          onPress={() => setShowCalendar(!showCalendar)}
+        >
+          <Text style={{ color: Fecha_cita ? '#000' : '#999' }}>
+            {Fecha_cita || "Seleccionar Fecha"}
+          </Text>
+        </TouchableOpacity>
+
+        {showCalendar && (
+          <View style={styles.calendarContainer}>
+            <Calendar
+              onDayPress={handleDayPress}
+              markedDates={markedDates}
+              minDate={new Date().toISOString().split('T')[0]}
+              theme={{
+                selectedDayBackgroundColor: '#10B981',
+                todayTextColor: '#10B981',
+                arrowColor: '#10B981',
+              }}
+            />
+          </View>
+        )}
         <TextInput
           style={styles.input}
           placeholder="Hora (HH:MM)"
@@ -202,6 +251,11 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     borderWidth: 1,
     borderColor: "#E5E7EB",
+  },
+  calendarContainer: {
+    marginBottom: 20,
+    borderRadius: 12,
+    overflow: 'hidden',
   },
   button: {
     flexDirection: "row",

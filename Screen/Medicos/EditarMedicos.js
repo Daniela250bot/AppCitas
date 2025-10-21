@@ -23,8 +23,12 @@ export default function EditarMedico() {
   const esEdicion = !!medico;
 
   const handleGuardar = async () => {
-    if (!Nombre || !Apellido || !idEspecialidad || !Telefono || !Email || !idConsultorio || !Documento || (!esEdicion && !Password)) {
+    if (!Nombre || !Apellido || !idEspecialidad || !Telefono || !Email || !idConsultorio || !Documento) {
       Alert.alert("Error", "Por favor, completa todos los campos.");
+      return;
+    }
+    if (!esEdicion && !Password) {
+      Alert.alert("Error", "La contraseña es obligatoria para nuevos médicos.");
       return;
     }
 
@@ -111,13 +115,15 @@ export default function EditarMedico() {
           onChangeText={setEmail}
           keyboardType="email-address"
         />
-         <TextInput
-          style={styles.input}
-          placeholder={esEdicion ? "Nueva Password (opcional)" : "Password"}
-          value={Password}
-          onChangeText={setPassword}
-          secureTextEntry
-        />
+         {!esEdicion && (
+           <TextInput
+            style={styles.input}
+            placeholder="Password"
+            value={Password}
+            onChangeText={setPassword}
+            secureTextEntry
+          />
+        )}
         <TextInput
           style={styles.input}
           placeholder="idConsultorio"

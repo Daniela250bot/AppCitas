@@ -1,12 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, TextInput, TouchableOpacity, Text, StyleSheet, ScrollView, Alert,} from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 import { crearEspecialidad, editarEspecialidad, } from "../../Src/Servicios/EspecialidadesService";
+import { useUser } from "../../Src/Contexts/UserContext";
 
 export default function EditarEspecialidad() {
   const navigation = useNavigation();
   const route = useRoute();
+  const { isRecepcionista } = useUser();
 
   const especialidad = route.params?.especialidad;
   const [Nombre, setNombre] = useState(especialidad ? especialidad.Nombre : "");
@@ -14,6 +16,14 @@ export default function EditarEspecialidad() {
     especialidad ? especialidad.Descripcion : ""
   );
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (!isRecepcionista()) {
+      Alert.alert("Acceso Denegado", "Solo los recepcionistas pueden crear o editar especialidades.", [
+        { text: "OK", onPress: () => navigation.goBack() },
+      ]);
+    }
+  }, [isRecepcionista, navigation]);
 
   const esEdicion = !!especialidad; // true si estamos editando
 

@@ -25,7 +25,7 @@ export default function EditarPaciente() {
   const esEdicion = !!paciente; 
 
   const handleGuardar = async () => {
-    if (!Nombre || !Apellido || !Documento || !Telefono || !Email || !Fecha_nacimiento || !Genero || !RH || !Nacionalidad || !Password) {
+    if (!Nombre || !Apellido || !Documento || !Telefono || !Email || !Fecha_nacimiento || !Genero || !RH || !Nacionalidad) {
       Alert.alert("Error", "Por favor, completa todos los campos.");
       return;
     }
@@ -33,10 +33,24 @@ export default function EditarPaciente() {
     try {
       let result;
       if (esEdicion) {
-        result = await editarPaciente(paciente.id, {
+        const data = {
           Nombre,
           Apellido,
-          Documento,  
+          Documento,
+          Telefono,
+          Email,
+          Fecha_nacimiento,
+          Genero,
+          RH,
+          Nacionalidad,
+        };
+        // No incluir Password en edición para evitar cambios de contraseña
+        result = await editarPaciente(paciente.id, data);
+      } else {
+         result = await crearPaciente({
+          Nombre,
+          Apellido,
+          Documento,
           Telefono,
           Email,
           Fecha_nacimiento,
@@ -45,20 +59,7 @@ export default function EditarPaciente() {
           Nacionalidad,
           Password,
         });
-      } else {
-         result = await crearPaciente({
-          Nombre,
-          Apellido,
-          Documento,  
-          Telefono, 
-          Email,
-          Fecha_nacimiento,
-          Genero,
-          RH,
-          Nacionalidad,
-          Password,
-        });
-      }  
+      }
       if (result.success) {
         Alert.alert("Exito", esEdicion ? "Paciente actualizado" : "Paciente creado correctamente");
         navegation.goBack(); 
@@ -139,14 +140,16 @@ export default function EditarPaciente() {
               onChangeText={setNacionalidad}
 
             />
-                <TextInput
-                    style={styles.input}
-                    placeholder=" ** Contraseña"
-                    secureTextEntry
-                    value={Password}
-                    onChangeText={setPassword}
-                    editable={!loading}
-                  />
+                {!esEdicion && (
+                  <TextInput
+                      style={styles.input}
+                      placeholder=" ** Contraseña"
+                      secureTextEntry
+                      value={Password}
+                      onChangeText={setPassword}
+                      editable={!loading}
+                    />
+                )}
 
               <TouchableOpacity style={styles.button} onPress={handleGuardar} disabled={loading}>
                 <Ionicons name="save-outline" size={22} color="#fff" />

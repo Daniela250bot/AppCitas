@@ -29,7 +29,7 @@ export default function DetalleConsultorio() {
         <Text style={styles.value}>{consultorio.Nombre}</Text>
 
         <Text style={styles.label}>📍 Ciudad:</Text>
-        <Text style={styles.value}>{consultorio.Ubicacion}</Text>
+        <Text style={styles.value}>{consultorio.Ciudad}</Text>
 
         <Text style={styles.label}>🏢 Direccion:</Text>
         <Text style={styles.value}>{consultorio.Direccion}</Text>
