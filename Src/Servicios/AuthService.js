@@ -67,13 +67,17 @@ export const getUserData = async () => {
 
 export const recuperarPassword = async (email) => {
   try {
+    console.log("AuthService: Enviando email para recuperación:", email);
     const response = await api.post('/recuperar-password', { email });
+    console.log("AuthService: Respuesta exitosa:", response.data);
     return { success: true, data: response.data };
   } catch (error) {
-    console.error("Error al recuperar contraseña:", error.response ? error.response.data : error.message);
+    console.error("AuthService: Error al recuperar contraseña:", error);
+    console.error("AuthService: Error response data:", error.response?.data);
+    console.error("AuthService: Error status:", error.response?.status);
     return {
       success: false,
-      message: error.response ? error.response.data : "Error de conexión",
+      message: error.response?.data?.message || error.response?.data || "Error de conexión",
     };
   }
 };

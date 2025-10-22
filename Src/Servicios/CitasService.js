@@ -28,13 +28,17 @@ export const eliminarCita = async (id) => {
 
 export const crearCita = async (data) => {
   try {
+    console.log("CitasService: Creando cita con datos:", data);
     const response = await api.post("/crearCita", data);
+    console.log("CitasService: Cita creada exitosamente:", response.data);
     return { success: true, data: response.data };
   } catch (error) {
-    console.error("Error al crear la cita:", error.response ? error.response.data : error.message);
+    console.error("CitasService: Error al crear la cita:", error);
+    console.error("CitasService: Error response data:", error.response?.data);
+    console.error("CitasService: Error status:", error.response?.status);
     return {
       success: false,
-      message: error.response ? error.response.data : "Error de conexion",
+      message: error.response?.data?.message || error.response?.data || "Error de conexion",
     };
   }
 };

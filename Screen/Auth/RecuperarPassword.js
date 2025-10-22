@@ -8,6 +8,9 @@ export default function RecuperarPassword({ navigation }) {
   const [loading, setLoading] = useState(false);
 
   const handleRecuperar = async () => {
+    console.log("RecuperarPassword: Email ingresado:", email);
+    console.log("RecuperarPassword: Email trimmed:", email.trim());
+
     if (!email.trim()) {
       Alert.alert("Error", "Por favor, ingresa tu correo electrónico");
       return;
@@ -21,7 +24,10 @@ export default function RecuperarPassword({ navigation }) {
 
     setLoading(true);
     try {
+      console.log("RecuperarPassword: Enviando solicitud de recuperación para:", email);
       const result = await recuperarPassword(email);
+      console.log("RecuperarPassword: Respuesta del servicio:", result);
+
       if (result.success) {
         Alert.alert(
           "Éxito",
@@ -29,9 +35,11 @@ export default function RecuperarPassword({ navigation }) {
           [{ text: "OK", onPress: () => navigation.goBack() }]
         );
       } else {
+        console.log("RecuperarPassword: Error en respuesta:", result.message);
         Alert.alert("Error", result.message || "No se pudo enviar el correo de recuperación");
       }
     } catch (error) {
+      console.error("RecuperarPassword: Error en catch:", error);
       Alert.alert("Error", "Ocurrió un error al procesar tu solicitud");
     } finally {
       setLoading(false);

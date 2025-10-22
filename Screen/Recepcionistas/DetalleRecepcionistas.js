@@ -19,9 +19,8 @@ export default function DetalleRecepcionista() {
 
   return (
     <ScrollView style={styles.container}>
-      <Text style={styles.headerTitle}>Detalle del Recepcionista</Text>
+      <Text style={styles.headerTitle}>👩‍💼 Detalle del Recepcionista</Text>
 
-      {/* Mostrar información */}
       <View style={styles.card}>
         <Text style={styles.label}>👤 Nombre:</Text>
         <Text style={styles.value}>{recepcionista.Nombre}</Text>
@@ -29,7 +28,7 @@ export default function DetalleRecepcionista() {
         <Text style={styles.label}>👤 Apellido:</Text>
         <Text style={styles.value}>{recepcionista.Apellido}</Text>
 
-        <Text style={styles.label}>🆔 Turno:</Text>
+        <Text style={styles.label}>🕒 Turno:</Text>
         <Text style={styles.value}>{recepcionista.Turno}</Text>
 
         <Text style={styles.label}>📞 Teléfono:</Text>
@@ -39,7 +38,6 @@ export default function DetalleRecepcionista() {
         <Text style={styles.value}>{recepcionista.Email}</Text>
       </View>
 
-      {/* Botones de acción */}
       <TouchableOpacity
         style={styles.button}
         onPress={() => navigation.navigate("EditarRecepcionista", { recepcionista })}
@@ -60,7 +58,11 @@ export default function DetalleRecepcionista() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#F9FAFB", padding: 20 },
+  container: {
+    flex: 1,
+    backgroundColor: "#F9FAFB",
+    padding: 20,
+  },
   headerTitle: {
     fontSize: 22,
     fontWeight: "bold",

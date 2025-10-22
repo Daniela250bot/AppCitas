@@ -2,18 +2,19 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Login from "../../Screen/Auth/Login";
 import Registro from "../../Screen/Auth/Registro";
 import RecuperarPassword from "../../Screen/Auth/RecuperarPassword";
+import RestablecerPassword from "../../Screen/Auth/RestablecerPassword";
 
 const Stack = createNativeStackNavigator();
 
 export default function AuthNavegation(){
     return(
-        <Stack.Navigator> 
+        <Stack.Navigator>
             <Stack.Screen
                 name="Login"
                 component={Login}
                 options={{ title: 'Iniciar Sesion'}}
            />
-           
+
             <Stack.Screen
                 name="Registro"
                 component={Registro}
@@ -23,6 +24,11 @@ export default function AuthNavegation(){
                 name="RecuperarPassword"
                 component={RecuperarPassword}
                 options={{ title: 'Recuperar Contraseña' }}
+           />
+            <Stack.Screen
+                name="RestablecerPassword"
+                component={RestablecerPassword}
+                options={{ title: 'Restablecer Contraseña' }}
            />
         </Stack.Navigator>
     )

@@ -25,23 +25,30 @@ export default function DetalleConsultorio() {
 
       {/* Información del consultorio */}
       <View style={styles.card}>
-        <Text style={styles.label}>🏷️ Nombre:</Text>
-        <Text style={styles.value}>{consultorio.Nombre}</Text>
+        <View style={styles.row}>
+          <Text style={styles.label}>🏷️ Nombre</Text>
+          <Text style={styles.value}>{consultorio.Nombre ?? "N/A"}</Text>
+        </View>
 
-        <Text style={styles.label}>📍 Ciudad:</Text>
-        <Text style={styles.value}>{consultorio.Ciudad}</Text>
+        <View style={styles.row}>
+          <Text style={styles.label}>📍 Ciudad</Text>
+          <Text style={styles.value}>{consultorio.Ciudad ?? "N/A"}</Text>
+        </View>
 
-        <Text style={styles.label}>🏢 Direccion:</Text>
-        <Text style={styles.value}>{consultorio.Direccion}</Text>
+        <View style={styles.row}>
+          <Text style={styles.label}>🏢 Dirección</Text>
+          <Text style={styles.value}>{consultorio.Direccion ?? "N/A"}</Text>
+        </View>
 
-        <Text style={styles.label}>☎️ Teléfono:</Text>
-        <Text style={styles.value}>{consultorio.Telefono}</Text>
-
+        <View style={styles.row}>
+          <Text style={styles.label}>☎️ Teléfono</Text>
+          <Text style={styles.value}>{consultorio.Telefono ?? "N/A"}</Text>
+        </View>
       </View>
 
       {/* Botones de acción */}
       <TouchableOpacity
-        style={styles.button}
+        style={[styles.button, styles.editButton]}
         onPress={() =>
           navigation.navigate("EditarConsultorio", { consultorio })
         }
@@ -51,7 +58,7 @@ export default function DetalleConsultorio() {
       </TouchableOpacity>
 
       <TouchableOpacity
-        style={[styles.button, { backgroundColor: "#EF4444" }]}
+        style={[styles.button, styles.backButton]}
         onPress={() => navigation.goBack()}
       >
         <Ionicons name="arrow-back-outline" size={22} color="#fff" />
@@ -62,52 +69,71 @@ export default function DetalleConsultorio() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#F9FAFB", padding: 20 },
+  container: { 
+    flex: 1, 
+    backgroundColor: "#F1F5F9", 
+    padding: 20 
+  },
   headerTitle: {
-    fontSize: 22,
+    fontSize: 24,
     fontWeight: "bold",
-    color: "#110e0eff",
+    color: "#1E293B",
     textAlign: "center",
-    marginBottom: 20,
+    marginBottom: 25,
   },
   card: {
     backgroundColor: "#fff",
-    borderRadius: 12,
-    padding: 15,
-    marginBottom: 20,
-    borderWidth: 1,
-    borderColor: "#E5E7EB",
+    borderRadius: 16,
+    padding: 20,
+    marginBottom: 30,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 6,
+    elevation: 5,
+  },
+  row: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginVertical: 8,
   },
   label: {
     fontSize: 16,
-    fontWeight: "bold",
-    color: "#374151",
-    marginTop: 10,
+    fontWeight: "600",
+    color: "#475569",
   },
   value: {
     fontSize: 16,
-    color: "#111827",
-    marginBottom: 5,
+    fontWeight: "500",
+    color: "#0F172A",
+    textAlign: "right",
+    maxWidth: "60%",
   },
   button: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#2563EB",
-    padding: 15,
-    borderRadius: 500,
     justifyContent: "center",
+    paddingVertical: 14,
+    borderRadius: 12,
     marginBottom: 15,
+    elevation: 3,
+  },
+  editButton: {
+    backgroundColor: "#2563EB",
+  },
+  backButton: {
+    backgroundColor: "#DC2626",
   },
   buttonText: {
     color: "#fff",
     fontSize: 16,
-    marginLeft: 8,
     fontWeight: "600",
+    marginLeft: 8,
   },
   errorText: {
     textAlign: "center",
     fontSize: 18,
-    color: "red",
+    color: "#DC2626",
     marginTop: 40,
   },
 });

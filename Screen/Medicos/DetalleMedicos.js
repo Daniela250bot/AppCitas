@@ -12,9 +12,7 @@ export default function DetalleMedico() {
   if (!medico) {
     return (
       <View style={styles.container}>
-        <Text style={styles.errorText}>
-          No se encontró la información del médico.
-        </Text>
+        <Text style={styles.errorText}>No se encontró la información del médico.</Text>
       </View>
     );
   }
@@ -23,94 +21,132 @@ export default function DetalleMedico() {
     <ScrollView style={styles.container}>
       <Text style={styles.headerTitle}>🩺 Detalle del Médico</Text>
 
-      {/* Información del médico */}
       <View style={styles.card}>
-        <Text style={styles.label}>👤 Nombre:</Text>
-        <Text style={styles.value}>{medico.Nombre}</Text>
+        <View style={styles.row}>
+          <Text style={styles.label}>👤 Nombre</Text>
+          <Text style={styles.value}>{medico.Nombre ?? "N/A"}</Text>
+        </View>
 
-        <Text style={styles.label}>👤 Apellido:</Text>
-        <Text style={styles.value}>{medico.Apellido}</Text>
+        <View style={styles.row}>
+          <Text style={styles.label}>👤 Apellido</Text>
+          <Text style={styles.value}>{medico.Apellido ?? "N/A"}</Text>
+        </View>
 
-        <Text style={styles.label}>🆔 Documento:</Text>
-        <Text style={styles.value}>{medico.Documento}</Text>
+        <View style={styles.row}>
+          <Text style={styles.label}>🆔 Documento</Text>
+          <Text style={styles.value}>{medico.Documento ?? "N/A"}</Text>
+        </View>
 
-        <Text style={styles.label}>📞 Teléfono:</Text>
-        <Text style={styles.value}>{medico.Telefono}</Text>
+        <View style={styles.row}>
+          <Text style={styles.label}>📞 Teléfono</Text>
+          <Text style={styles.value}>{medico.Telefono ?? "N/A"}</Text>
+        </View>
 
-        <Text style={styles.label}>✉️ Correo:</Text>
-        <Text style={styles.value}>{medico.Email}</Text>
+        <View style={styles.row}>
+          <Text style={styles.label}>✉️ Correo</Text>
+          <Text style={styles.value}>{medico.Email ?? "N/A"}</Text>
+        </View>
 
-        <Text style={styles.label}>🎓 Especialidad:</Text>
-        <Text style={styles.value}>{medico.especialidad ? medico.especialidad.Nombre : medico.idEspecialidad}</Text>
+        <View style={styles.row}>
+          <Text style={styles.label}>🎓 Especialidad</Text>
+          <Text style={styles.value}>
+            {medico.especialidad ? medico.especialidad.Nombre : medico.idEspecialidad}
+          </Text>
+        </View>
 
-        <Text style={styles.label}>🏥 Consultorio:</Text>
-        <Text style={styles.value}>{medico.consultorio ? medico.consultorio.Nombre : medico.idConsultorio}</Text>
+        <View style={styles.row}>
+          <Text style={styles.label}>🏥 Consultorio</Text>
+          <Text style={styles.value}>
+            {medico.consultorio ? medico.consultorio.Nombre : medico.idConsultorio}
+          </Text>
+        </View>
       </View>
 
-      {/* Botones de acción */}
       <TouchableOpacity
-        style={styles.button}
+        style={[styles.button, styles.editButton]}
         onPress={() => navigation.navigate("EditarMedicos", { medico })}
       >
         <Ionicons name="create-outline" size={22} color="#fff" />
         <Text style={styles.buttonText}>Editar Médico</Text>
       </TouchableOpacity>
 
-     <TouchableOpacity style={[styles.button, { backgroundColor: "#EF4444" }]} onPress={() => navigation.goBack()}>
-             <Ionicons name="arrow-back-outline" size={22} color="#fff" />
-             <Text style={styles.buttonText}>Volver</Text>
-           </TouchableOpacity>
-         </ScrollView>
+      <TouchableOpacity
+        style={[styles.button, styles.backButton]}
+        onPress={() => navigation.goBack()}
+      >
+        <Ionicons name="arrow-back-outline" size={22} color="#fff" />
+        <Text style={styles.buttonText}>Volver</Text>
+      </TouchableOpacity>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#F9FAFB", padding: 20 },
+  container: { 
+    flex: 1, 
+    backgroundColor: "#F1F5F9", 
+    padding: 20 
+  },
   headerTitle: {
-    fontSize: 22,
+    fontSize: 24,
     fontWeight: "bold",
-    color: "#110e0eff",
+    color: "#1E293B",
     textAlign: "center",
-    marginBottom: 20,
+    marginBottom: 25,
   },
   card: {
     backgroundColor: "#fff",
-    borderRadius: 12,
-    padding: 15,
-    marginBottom: 20,
-    borderWidth: 1,
-    borderColor: "#E5E7EB",
+    borderRadius: 16,
+    padding: 20,
+    marginBottom: 30,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 6,
+    elevation: 5,
+  },
+  row: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginVertical: 8,
   },
   label: {
     fontSize: 16,
-    fontWeight: "bold",
-    color: "#374151",
-    marginTop: 10,
+    fontWeight: "600",
+    color: "#475569",
   },
   value: {
     fontSize: 16,
-    color: "#111827",
-    marginBottom: 5,
+    fontWeight: "500",
+    color: "#0F172A",
+    textAlign: "right",
+    maxWidth: "60%",
   },
   button: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#2563EB",
-    padding: 15,
-    borderRadius: 500,
     justifyContent: "center",
+    paddingVertical: 14,
+    borderRadius: 12,
     marginBottom: 15,
+    elevation: 3,
+  },
+  editButton: {
+    backgroundColor: "#2563EB",
+  },
+  backButton: {
+    backgroundColor: "#DC2626",
   },
   buttonText: {
     color: "#fff",
     fontSize: 16,
-    marginLeft: 8,
     fontWeight: "600",
+    marginLeft: 8,
   },
   errorText: {
     textAlign: "center",
     fontSize: 18,
-    color: "red",
+    color: "#DC2626",
     marginTop: 40,
   },
 });

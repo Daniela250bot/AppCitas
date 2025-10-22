@@ -17,7 +17,19 @@
     },
     "android": {
       "useNextNotificationsApi": true,
-      "intentFilters": [],
+      "intentFilters": [
+        {
+          "action": "VIEW",
+          "data": [
+            {
+              "scheme": "exp",
+              "host": "192.168.1.40",
+              "pathPrefix": "/reset-password"
+            }
+          ],
+          "category": ["BROWSABLE", "DEFAULT"]
+        }
+      ],
       "permissions": [],
       "usesCleartextTraffic": true,
       "adaptiveIcon": {
