@@ -15,6 +15,8 @@ import { useUser } from "../../Src/Contexts/UserContext";
 
 export default function Registro({ navigation }) {
   const { user, isRecepcionista } = useUser();
+  const [codigoVerificacion, setCodigoVerificacion] = useState("");
+  const [showForm, setShowForm] = useState(false);
   const [name, setName] = useState("");
   const [apellido, setApellido] = useState("");
   const [documento, setDocumento] = useState("");
@@ -39,6 +41,20 @@ export default function Registro({ navigation }) {
       ]);
     }
   }, [isRecepcionista, navigation]);
+
+  useEffect(() => {
+    if (!codigoVerificacion || codigoVerificacion !== "2025vital") {
+      setShowForm(false);
+    }
+  }, [codigoVerificacion]);
+
+  const handleVerificarCodigo = () => {
+    if (codigoVerificacion === "2025vital") {
+      setShowForm(true);
+    } else {
+      Alert.alert("Error", "Código de verificación incorrecto");
+    }
+  };
 
   const handleRegister = async () => {
     if (!name.trim()) {
@@ -120,6 +136,52 @@ export default function Registro({ navigation }) {
     }
   };
 
+  if (!showForm) {
+    return (
+      <ScrollView contentContainerStyle={styles.container}>
+        {/* 🏥 Encabezado con logo */}
+        <View style={styles.header}>
+          <Image
+            source={{
+              uri: "https://cdn-icons-png.flaticon.com/512/2966/2966485.png",
+            }}
+            style={styles.logo}
+          />
+          <Text style={styles.appTitle}>Centro Médico VitalCare</Text>
+          <Text style={styles.subTitle}>Registro de Recepcionista 💙</Text>
+        </View>
+
+        <View style={styles.card}>
+          <Text style={styles.titulo}>🔐 Código de Verificación</Text>
+          <Text style={styles.description}>
+            Ingresa el código de verificación proporcionado por la empresa para registrar un recepcionista.
+          </Text>
+
+          <TextInput
+            style={styles.input}
+            placeholder="Código de verificación *"
+            value={codigoVerificacion}
+            onChangeText={setCodigoVerificacion}
+            secureTextEntry
+          />
+
+          <View style={{ marginTop: 10 }}>
+            <BottonComponent
+              title="✅ Verificar Código"
+              onPress={handleVerificarCodigo}
+            />
+
+            <BottonComponent
+              title="⬅️ Volver al Login"
+              onPress={() => navigation.goBack()}
+              style={{ backgroundColor: "#6B7280" }}
+            />
+          </View>
+        </View>
+      </ScrollView>
+    );
+  }
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
       {/* 🏥 Encabezado con logo */}
@@ -136,6 +198,9 @@ export default function Registro({ navigation }) {
 
       <View style={styles.card}>
         <Text style={styles.titulo}>🩺 Registro de Usuario</Text>
+        <Text style={styles.description}>
+          Código verificado correctamente. Ahora puedes registrar usuarios en el sistema.
+        </Text>
 
         <Text style={styles.label}>Selecciona el Rol a Registrar:</Text>
         <View style={styles.roleButtons}>

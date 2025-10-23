@@ -143,19 +143,6 @@ export default function Login({ navigation }) {
           />
         )}
 
-        {user?.role === "Recepcionista" && (
-          <Pressable
-            onPress={() => navigation.navigate("Registro")}
-            disabled={loading}
-            style={({ pressed }) => [
-              styles.botonRegistro,
-              pressed && styles.botonPressed,
-            ]}
-          >
-            <Text style={styles.botonTexto}>📝 ¿No tienes cuenta? Regístrate</Text>
-          </Pressable>
-        )}
-
         <Pressable
           onPress={() => navigation.navigate("RecuperarPassword")}
           disabled={loading}
@@ -165,6 +152,17 @@ export default function Login({ navigation }) {
           ]}
         >
           <Text style={styles.botonTexto}>🔑 ¿Olvidaste tu contraseña?</Text>
+        </Pressable>
+
+        <Pressable
+          onPress={() => navigation.navigate("RegistroRecepcionista")}
+          disabled={loading}
+          style={({ pressed }) => [
+            styles.botonRegistroRecepcionista,
+            pressed && styles.botonPressed,
+          ]}
+        >
+          <Text style={styles.botonTexto}>👨‍💼 Registrar Recepcionista</Text>
         </Pressable>
       </Animated.View>
     </View>
@@ -253,6 +251,19 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
     alignItems: "center",
     shadowColor: "#F59E0B",
+    shadowOpacity: 0.3,
+    shadowOffset: { width: 0, height: 3 },
+    shadowRadius: 6,
+    elevation: 4,
+  },
+  botonRegistroRecepcionista: {
+    marginTop: 12,
+    width: "85%",
+    backgroundColor: "#10B981",
+    borderRadius: 20,
+    paddingVertical: 14,
+    alignItems: "center",
+    shadowColor: "#10B981",
     shadowOpacity: 0.3,
     shadowOffset: { width: 0, height: 3 },
     shadowRadius: 6,

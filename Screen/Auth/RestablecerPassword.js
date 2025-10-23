@@ -6,7 +6,7 @@ import { useRoute } from "@react-navigation/native";
 
 export default function RestablecerPassword({ navigation }) {
   const route = useRoute();
-  const { token } = route.params || {};
+  const { token, email } = route.params || {};
 
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -65,7 +65,7 @@ export default function RestablecerPassword({ navigation }) {
       <View style={styles.card}>
         <Text style={styles.titulo}>🔐 Nueva Contraseña</Text>
         <Text style={styles.description}>
-          Ingresa tu nueva contraseña. Debe tener al menos 8 caracteres.
+          Código verificado correctamente. Ingresa tu nueva contraseña. Debe tener al menos 8 caracteres.
         </Text>
 
         <TextInput

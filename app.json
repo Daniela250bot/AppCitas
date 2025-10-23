@@ -27,7 +27,10 @@
               "pathPrefix": "/reset-password"
             }
           ],
-          "category": ["BROWSABLE", "DEFAULT"]
+          "category": [
+            "BROWSABLE",
+            "DEFAULT"
+          ]
         }
       ],
       "permissions": [],
@@ -46,6 +49,9 @@
       "eas": {
         "projectId": "5e041a7d-9686-40fa-b08c-16316c9bfe99"
       }
-    }
+    },
+    "plugins": [
+      "expo-asset"
+    ]
   }
 }

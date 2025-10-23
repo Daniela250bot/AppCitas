@@ -82,6 +82,39 @@ export const recuperarPassword = async (email) => {
   }
 };
 
+export const verificarCodigo = async (email, codigo) => {
+  try {
+    const response = await api.post('/verificar-codigo', { email, codigo });
+    return { success: true, data: response.data, token: response.data.token };
+  } catch (error) {
+    console.error("Error al verificar código:", error.response ? error.response.data : error.message);
+    return {
+      success: false,
+      message: error.response?.data?.message || error.response?.data || "Error de conexión",
+    };
+  }
+};
+
+export const registerRecepcionista = async (recepcionistaData) => {
+  try {
+    console.log("AuthService: Enviando datos para registro de recepcionista:", recepcionistaData);
+    const response = await api.post('/registrar-recepcionista', {
+      ...recepcionistaData,
+      role: 'Recepcionista'
+    });
+    console.log("AuthService: Respuesta exitosa del registro:", response.data);
+    return { success: true, data: response.data };
+  } catch (error) {
+    console.error("Error al registrar recepcionista:", error.response ? error.response.data : error.message);
+    console.error("AuthService: Status del error:", error.response?.status);
+    console.error("AuthService: Headers del error:", error.response?.headers);
+    return {
+      success: false,
+      message: error.response?.data?.message || error.response?.data || "Error de conexión",
+    };
+  }
+};
+
 export const restablecerPassword = async (token, password) => {
   try {
     const response = await api.post('/restablecer-password', { token, password });
