@@ -7,7 +7,7 @@ export default function AyudaSoporte({ navigation }) {
     const { user } = useUser();
 
     const handleContactSupport = () => {
-        const email = 'soporte@citaseps.com';
+        const email = 'danis0106@gmail.com.com';
         const subject = 'Soporte Técnico - App Citas EPS';
         const url = `mailto:${email}?subject=${encodeURIComponent(subject)}`;
         Linking.openURL(url).catch(() => {

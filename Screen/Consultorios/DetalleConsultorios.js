@@ -1,5 +1,12 @@
 import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  ScrollView,
+  ImageBackground,
+} from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 
@@ -20,87 +27,102 @@ export default function DetalleConsultorio() {
   }
 
   return (
-    <ScrollView style={styles.container}>
-      <Text style={styles.headerTitle}>🏥 Detalle del Consultorio</Text>
+    <ImageBackground
+      source={{
+        uri: "https://img.freepik.com/foto-gratis/fondo-difuminado-clinica-hospital-interior-vacio_103324-627.jpg",
+      }}
+      style={styles.container}
+      blurRadius={3}
+    >
+      <ScrollView contentContainerStyle={styles.scrollContent}>
+        <Text style={styles.headerTitle}>🏥 Detalle del Consultorio</Text>
 
-      {/* Información del consultorio */}
-      <View style={styles.card}>
-        <View style={styles.row}>
-          <Text style={styles.label}>🏷️ Nombre</Text>
-          <Text style={styles.value}>{consultorio.Nombre ?? "N/A"}</Text>
+        <View style={styles.card}>
+          <View style={styles.row}>
+            <Text style={styles.label}>🏷️ Nombre</Text>
+            <Text style={styles.value}>{consultorio.Nombre ?? "N/A"}</Text>
+          </View>
+
+          <View style={styles.row}>
+            <Text style={styles.label}>📍 Ciudad</Text>
+            <Text style={styles.value}>{consultorio.Ciudad ?? "N/A"}</Text>
+          </View>
+
+          <View style={styles.row}>
+            <Text style={styles.label}>🏢 Dirección</Text>
+            <Text style={styles.value}>{consultorio.Direccion ?? "N/A"}</Text>
+          </View>
+
+          <View style={styles.row}>
+            <Text style={styles.label}>☎️ Teléfono</Text>
+            <Text style={styles.value}>{consultorio.Telefono ?? "N/A"}</Text>
+          </View>
         </View>
 
-        <View style={styles.row}>
-          <Text style={styles.label}>📍 Ciudad</Text>
-          <Text style={styles.value}>{consultorio.Ciudad ?? "N/A"}</Text>
-        </View>
+        <TouchableOpacity
+          style={[styles.button, styles.editButton]}
+          onPress={() =>
+            navigation.navigate("EditarConsultorio", { consultorio })
+          }
+        >
+          <Ionicons name="create-outline" size={22} color="#fff" />
+          <Text style={styles.buttonText}>Editar Consultorio</Text>
+        </TouchableOpacity>
 
-        <View style={styles.row}>
-          <Text style={styles.label}>🏢 Dirección</Text>
-          <Text style={styles.value}>{consultorio.Direccion ?? "N/A"}</Text>
-        </View>
-
-        <View style={styles.row}>
-          <Text style={styles.label}>☎️ Teléfono</Text>
-          <Text style={styles.value}>{consultorio.Telefono ?? "N/A"}</Text>
-        </View>
-      </View>
-
-      {/* Botones de acción */}
-      <TouchableOpacity
-        style={[styles.button, styles.editButton]}
-        onPress={() =>
-          navigation.navigate("EditarConsultorio", { consultorio })
-        }
-      >
-        <Ionicons name="create-outline" size={22} color="#fff" />
-        <Text style={styles.buttonText}>Editar Consultorio</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity
-        style={[styles.button, styles.backButton]}
-        onPress={() => navigation.goBack()}
-      >
-        <Ionicons name="arrow-back-outline" size={22} color="#fff" />
-        <Text style={styles.buttonText}>Volver</Text>
-      </TouchableOpacity>
-    </ScrollView>
+        <TouchableOpacity
+          style={[styles.button, styles.backButton]}
+          onPress={() => navigation.goBack()}
+        >
+          <Ionicons name="arrow-back-outline" size={22} color="#fff" />
+          <Text style={styles.buttonText}>Volver</Text>
+        </TouchableOpacity>
+      </ScrollView>
+    </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { 
-    flex: 1, 
-    backgroundColor: "#F1F5F9", 
-    padding: 20 
+  container: {
+    flex: 1,
+    backgroundColor: "#E0F7FA",
+  },
+  scrollContent: {
+    padding: 20,
+    paddingBottom: 40,
   },
   headerTitle: {
-    fontSize: 24,
-    fontWeight: "bold",
-    color: "#1E293B",
+    fontSize: 28,
+    fontWeight: "800",
+    color: "#0369A1",
     textAlign: "center",
     marginBottom: 25,
+    letterSpacing: 0.5,
+    textShadowColor: "#E0F2FE",
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 2,
   },
   card: {
-    backgroundColor: "#fff",
-    borderRadius: 16,
-    padding: 20,
+    backgroundColor: "rgba(255, 255, 255, 0.95)",
+    borderRadius: 20,
+    padding: 24,
     marginBottom: 30,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.1,
-    shadowRadius: 6,
-    elevation: 5,
+    shadowColor: "#0EA5E9",
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.25,
+    shadowRadius: 8,
+    elevation: 6,
+    borderWidth: 1,
+    borderColor: "#BAE6FD",
   },
   row: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginVertical: 8,
+    marginVertical: 10,
   },
   label: {
     fontSize: 16,
-    fontWeight: "600",
-    color: "#475569",
+    fontWeight: "700",
+    color: "#0369A1",
   },
   value: {
     fontSize: 16,
@@ -113,20 +135,24 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    paddingVertical: 14,
-    borderRadius: 12,
+    paddingVertical: 15,
+    borderRadius: 30,
     marginBottom: 15,
-    elevation: 3,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.25,
+    shadowRadius: 6,
+    elevation: 4,
   },
   editButton: {
-    backgroundColor: "#2563EB",
+    backgroundColor: "#0284C7",
   },
   backButton: {
     backgroundColor: "#DC2626",
   },
   buttonText: {
     color: "#fff",
-    fontSize: 16,
+    fontSize: 17,
     fontWeight: "600",
     marginLeft: 8,
   },
@@ -134,6 +160,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontSize: 18,
     color: "#DC2626",
-    marginTop: 40,
+    marginTop: 50,
+    fontWeight: "600",
   },
 });

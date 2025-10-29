@@ -10,7 +10,7 @@ export default function RegistroRecepcionista({ navigation }) {
   const [formData, setFormData] = useState({
     Nombre: "",
     Apellido: "",
-    Turno: "Mañana",
+    Turno: "",
     Telefono: "",
     Email: "",
     Password: "",

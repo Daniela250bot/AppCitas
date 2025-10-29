@@ -4,6 +4,7 @@ import { useNavigation } from "@react-navigation/native";
 import CitasCard from "../../componentes/CitasCard";
 import { useEffect, useState, useContext } from "react";
 import { UserContext } from "../../Src/Contexts/UserContext";
+import { Ionicons } from "@expo/vector-icons"; // 🔹 Importar íconos
 
 export default function ListarCitas() {
   const [citas, setCitas] = useState([]);
@@ -77,30 +78,37 @@ export default function ListarCitas() {
   if (loading) {
     return (
       <View style={styles.centered}>
-        <ActivityIndicator size="large" color="#0000ff" />
+        <ActivityIndicator size="large" color="#0077b6" />
+        <Text style={{ color: "#0077b6", marginTop: 10 }}>Cargando citas...</Text>
       </View>
     );
   }
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={styles.container}>
+      <Text style={styles.header}>🩺 Lista de Citas</Text>
+
       <FlatList
         data={citas}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
-          <CitasCard
-            cita={item}
-            onEdit={isPaciente() ? null : () => handleEditar(item)}
-            onDelete={isPaciente() ? null : () => handleEliminar(item.id)}
-            onPress={() => navigation.navigate("DetalleCita", { cita: item })}
-          />
+          <View style={styles.cardWrapper}>
+            <CitasCard
+              cita={item}
+              onEdit={isPaciente() ? null : () => handleEditar(item)}
+              onDelete={isPaciente() ? null : () => handleEliminar(item.id)}
+              onPress={() => navigation.navigate("DetalleCita", { cita: item })}
+            />
+          </View>
         )}
         ListEmptyComponent={<Text style={styles.empty}>No hay Citas Registradas.</Text>}
+        contentContainerStyle={{ paddingBottom: 100 }}
       />
 
       {!isPaciente() && !isMedico() && (
         <TouchableOpacity style={styles.botonCrear} onPress={handleCrear}>
-          <Text style={styles.textBotton}>+ Nueva Cita</Text>
+          <Ionicons name="medical-outline" size={24} color="#fff" style={{ marginRight: 8 }} />
+          <Text style={styles.textBotton}>Nueva Cita</Text>
         </TouchableOpacity>
       )}
     </View>
@@ -108,27 +116,64 @@ export default function ListarCitas() {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#F0F9FF", // azul claro médico
+    paddingHorizontal: 10,
+  },
+  header: {
+    fontSize: 22,
+    fontWeight: "bold",
+    textAlign: "center",
+    marginTop: 45,
+    marginBottom: 10,
+    color: "#0C4A6E",
+  },
   centered: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    backgroundColor: "#E0F2FE",
   },
   empty: {
     textAlign: "center",
-    marginTop: 20,
+    marginTop: 40,
     fontSize: 16,
-    color: "#555",
+    color: "#64748B",
+    fontStyle: "italic",
+  },
+  cardWrapper: {
+    backgroundColor: "#FFFFFF",
+    marginVertical: 6,
+    marginHorizontal: 4,
+    borderRadius: 16,
+    padding: 4,
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowOffset: { width: 0, height: 3 },
+    shadowRadius: 4,
+    elevation: 3,
   },
   botonCrear: {
-    backgroundColor: "#0a18d6ff",
-    padding: 16,
-    borderRadius: 30,
-    margin: 16,
+    position: "absolute",
+    bottom: 25,
+    alignSelf: "center",
+    backgroundColor: "#0284C7", // azul médico
+    paddingVertical: 14,
+    paddingHorizontal: 28,
+    borderRadius: 40,
+    flexDirection: "row", // 🔹 Ícono + texto
     alignItems: "center",
+    justifyContent: "center",
+    elevation: 5,
+    shadowColor: "#000",
+    shadowOpacity: 0.3,
+    shadowRadius: 5,
   },
   textBotton: {
     color: "#fff",
     fontSize: 18,
     fontWeight: "bold",
+    textAlign: "center",
   },
 });

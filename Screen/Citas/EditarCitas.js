@@ -4,7 +4,11 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 import { Calendar } from "react-native-calendars";
 import { crearCita, editarCita, verificarDisponibilidad } from "../../Src/Servicios/CitasService";
+import { listarPacientes } from "../../Src/Servicios/PacienteService";
+import { listarMedicos } from "../../Src/Servicios/MedicosService";
+import { listarRecepcionistas } from "../../Src/Servicios/RecepcionistasService";
 import { useUser } from "../../Src/Contexts/UserContext";
+import SearchablePicker from "../../componentes/SearchablePicker";
 import * as Notifications from 'expo-notifications';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -33,6 +37,23 @@ export default function EditarCita() {
   const [markedDates, setMarkedDates] = useState({});
   const [showCalendar, setShowCalendar] = useState(false);
 
+  // Estados para los selectores
+  const [pacientes, setPacientes] = useState([]);
+  const [medicos, setMedicos] = useState([]);
+  const [recepcionistas, setRecepcionistas] = useState([]);
+  const [estadosCita] = useState([
+    { label: "Pendiente", value: "Pendiente" },
+    { label: "Confirmada", value: "Confirmada" },
+    { label: "Cancelada", value: "Cancelada" },
+    { label: "Completada", value: "Completada" },
+  ]);
+  const [loadingPacientes, setLoadingPacientes] = useState(false);
+  const [loadingMedicos, setLoadingMedicos] = useState(false);
+  const [loadingRecepcionistas, setLoadingRecepcionistas] = useState(false);
+  const [errorPacientes, setErrorPacientes] = useState(null);
+  const [errorMedicos, setErrorMedicos] = useState(null);
+  const [errorRecepcionistas, setErrorRecepcionistas] = useState(null);
+
   const esEdicion = !!cita;
 
   useEffect(() => {
@@ -53,6 +74,76 @@ export default function EditarCita() {
     }
   }, [idMedico, esEdicion]);
 
+  // Cargar datos para los selectores
+  useEffect(() => {
+    loadPacientes();
+    loadMedicos();
+    loadRecepcionistas();
+  }, []);
+
+  const loadPacientes = async () => {
+    setLoadingPacientes(true);
+    setErrorPacientes(null);
+    try {
+      const result = await listarPacientes();
+      if (result.success) {
+        const pacientesData = result.data.map(paciente => ({
+          label: `${paciente.Nombre} ${paciente.Apellido} (ID: ${paciente.id})`,
+          value: paciente.id.toString()
+        }));
+        setPacientes(pacientesData);
+      } else {
+        setErrorPacientes(result.message || "Error al cargar pacientes");
+      }
+    } catch (error) {
+      setErrorPacientes("Error de conexión al cargar pacientes");
+    } finally {
+      setLoadingPacientes(false);
+    }
+  };
+
+  const loadMedicos = async () => {
+    setLoadingMedicos(true);
+    setErrorMedicos(null);
+    try {
+      const result = await listarMedicos();
+      if (result.success) {
+        const medicosData = result.data.map(medico => ({
+          label: `${medico.Nombre} ${medico.Apellido} (ID: ${medico.id})`,
+          value: medico.id.toString()
+        }));
+        setMedicos(medicosData);
+      } else {
+        setErrorMedicos(result.message || "Error al cargar médicos");
+      }
+    } catch (error) {
+      setErrorMedicos("Error de conexión al cargar médicos");
+    } finally {
+      setLoadingMedicos(false);
+    }
+  };
+
+  const loadRecepcionistas = async () => {
+    setLoadingRecepcionistas(true);
+    setErrorRecepcionistas(null);
+    try {
+      const result = await listarRecepcionistas();
+      if (result.success) {
+        const recepcionistasData = result.data.map(recepcionista => ({
+          label: `${recepcionista.Nombre} ${recepcionista.Apellido} (ID: ${recepcionista.id})`,
+          value: recepcionista.id.toString()
+        }));
+        setRecepcionistas(recepcionistasData);
+      } else {
+        setErrorRecepcionistas(result.message || "Error al cargar recepcionistas");
+      }
+    } catch (error) {
+      setErrorRecepcionistas("Error de conexión al cargar recepcionistas");
+    } finally {
+      setLoadingRecepcionistas(false);
+    }
+  };
+
   const loadDisponibilidad = async () => {
     try {
       const result = await verificarDisponibilidad(idMedico);
@@ -70,31 +161,30 @@ export default function EditarCita() {
       console.error("Error cargando disponibilidad:", error);
     }
   };
-  //Notificacion
+
   const programarNotificacion = async () => {
-          const { status } = await Notifications.getPermissionsAsync();
-          const preferencia = await AsyncStorage.getItem('notificaciones_activas');
-          if(status!=='granted' || preferencia !== 'true'){
-              Alert.alert('No tienes permisos para recibir notificaciones');
-              return;
-          }
-  
-          const trigger = new Date(Date.now() +1000); //al instante apartir de ahora 
-  
-          try {
-              await Notifications.scheduleNotificationAsync({
-                  content: {
-                      title: "Citas ",
-                      body: "Se creo la cita exitosamente .  "
-                  },
-                  trigger,
-              });
-              Alert.alert('notificación programada para la creacion de citas'); 
-          } catch (error) {
-              Alert.alert('Error al programar la notificación');
-          }
-      }
-  
+    const { status } = await Notifications.getPermissionsAsync();
+    const preferencia = await AsyncStorage.getItem('notificaciones_activas');
+    if(status!=='granted' || preferencia !== 'true'){
+        Alert.alert('No tienes permisos para recibir notificaciones');
+        return;
+    }
+
+    const trigger = new Date(Date.now() +1000);
+
+    try {
+        await Notifications.scheduleNotificationAsync({
+            content: {
+                title: "Citas",
+                body: "Se creó la cita exitosamente."
+            },
+            trigger,
+        });
+        Alert.alert('Notificación programada correctamente'); 
+    } catch (error) {
+        Alert.alert('Error al programar la notificación');
+    }
+  }
 
   const handleDayPress = (day) => {
     setFecha_cita(day.dateString);
@@ -108,7 +198,7 @@ export default function EditarCita() {
     }
 
     if (!Fecha_cita || !Hora || !idPaciente || !idMedico || !idResepcionista || !Estado) {
-      Alert.alert("Error", "Por favor, completa todos los campos.");
+      Alert.alert("Error", "Por favor, completa todos los campos obligatorios.");
       return;
     }
 
@@ -150,7 +240,7 @@ export default function EditarCita() {
   };
 
   return (
-    <ScrollView>
+    <ScrollView style={{ backgroundColor: "#E9FDF3" }}>
       <View style={styles.container}>
         <View style={styles.logoContainer}>
           <Image
@@ -179,19 +269,55 @@ export default function EditarCita() {
               markedDates={markedDates}
               minDate={new Date().toISOString().split("T")[0]}
               theme={{
-                selectedDayBackgroundColor: "#34D399",
-                todayTextColor: "#10B981",
-                arrowColor: "#10B981",
+                selectedDayBackgroundColor: "#10B981",
+                todayTextColor: "#059669",
+                arrowColor: "#059669",
+                monthTextColor: "#047857",
+                textSectionTitleColor: "#34D399",
               }}
             />
           </View>
         )}
 
         <TextInput style={styles.input} placeholder="Hora (HH:MM)" value={Hora} onChangeText={setHora} />
-        <TextInput style={styles.input} placeholder="ID Paciente" value={idPaciente} onChangeText={setidPaciente} keyboardType="numeric" />
-        <TextInput style={styles.input} placeholder="ID Médico" value={idMedico} onChangeText={setidMedico} keyboardType="numeric" />
-        <TextInput style={styles.input} placeholder="ID Recepcionista" value={idResepcionista} onChangeText={setidResepcionista} keyboardType="numeric" editable={esEdicion || user?.role !== "idRecepcionista"} />
-        <TextInput style={styles.input} placeholder="Estado de la cita" value={Estado} onChangeText={setEstado} />
+
+        <SearchablePicker
+          data={pacientes}
+          value={idPaciente}
+          onValueChange={setidPaciente}
+          placeholder="Seleccionar Paciente"
+          searchPlaceholder="Buscar paciente por nombre o ID..."
+          loading={loadingPacientes}
+          error={errorPacientes}
+        />
+
+        <SearchablePicker
+          data={medicos}
+          value={idMedico}
+          onValueChange={setidMedico}
+          placeholder="Seleccionar Médico"
+          searchPlaceholder="Buscar médico por nombre o ID..."
+          loading={loadingMedicos}
+          error={errorMedicos}
+        />
+
+        <SearchablePicker
+          data={recepcionistas}
+          value={idResepcionista}
+          onValueChange={setidResepcionista}
+          placeholder="Seleccionar Recepcionista"
+          searchPlaceholder="Buscar recepcionista por nombre o ID..."
+          loading={loadingRecepcionistas}
+          error={errorRecepcionistas}
+        />
+
+        <SearchablePicker
+          data={estadosCita}
+          value={Estado}
+          onValueChange={setEstado}
+          placeholder="Seleccionar Estado de la Cita"
+          searchPlaceholder="Buscar estado..."
+        />
 
         <TouchableOpacity style={styles.button} onPress={handleGuardar} disabled={loading}>
           <Ionicons name="save-outline" size={22} color="#fff" />
@@ -207,8 +333,15 @@ export default function EditarCita() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#F3F4F6",
+    backgroundColor: "#FFFFFF",
     padding: 20,
+    margin: 20,
+    borderRadius: 20,
+    shadowColor: "#10B981",
+    shadowOpacity: 0.15,
+    shadowRadius: 10,
+    shadowOffset: { width: 0, height: 4 },
+    elevation: 6,
   },
   logoContainer: {
     alignItems: "center",
@@ -216,69 +349,63 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   logo: {
-    width: 100,
-    height: 100,
-    borderRadius: 60,
+    width: 110,
+    height: 110,
+    borderRadius: 80,
     resizeMode: "contain",
     borderWidth: 2,
     borderColor: "#10B981",
-    shadowColor: "#10B981",
-    shadowOpacity: 0.4,
-    shadowRadius: 6,
+    backgroundColor: "#ECFDF5",
   },
   headerTitle: {
-    fontSize: 24,
-    fontWeight: "700",
-    color: "#1F2937",
+    fontSize: 26,
+    fontWeight: "bold",
+    color: "#064E3B",
     textAlign: "center",
-    marginBottom: 25,
+    marginBottom: 30,
+    letterSpacing: 0.5,
   },
   input: {
-    backgroundColor: "#fff",
+    backgroundColor: "#F9FAFB",
     padding: 15,
-    borderRadius: 14,
+    borderRadius: 16,
     marginBottom: 15,
     borderWidth: 1,
-    borderColor: "#E5E7EB",
-    elevation: 3,
+    borderColor: "#D1D5DB",
     shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
+    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.08,
     shadowRadius: 3,
   },
   calendarContainer: {
     marginBottom: 20,
-    borderRadius: 14,
-    backgroundColor: "#fff",
+    borderRadius: 16,
+    backgroundColor: "#FFFFFF",
     borderWidth: 1,
-    borderColor: "#E5E7EB",
+    borderColor: "#D1FAE5",
     overflow: "hidden",
     elevation: 3,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
   },
   button: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#10B981",
-    paddingVertical: 14,
-    borderRadius: 30,
+    backgroundColor: "#047857",
+    paddingVertical: 15,
+    borderRadius: 40,
     justifyContent: "center",
-    marginTop: 10,
-    marginBottom: 30,
-    elevation: 4,
-    shadowColor: "#10B981",
+    marginTop: 15,
+    marginBottom: 40,
+    shadowColor: "#047857",
     shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.5,
+    shadowOpacity: 0.3,
+    shadowRadius: 5,
+    elevation: 5,
   },
   buttonText: {
     color: "#fff",
     fontSize: 17,
     marginLeft: 8,
     fontWeight: "600",
-    letterSpacing: 0.3,
+    letterSpacing: 0.4,
   },
 });
