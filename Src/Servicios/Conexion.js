@@ -1,8 +1,8 @@
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const API_BASE_URL = "http://10.2.234.61:8000/api";
-//const API_BASE_URL = "https://dinkly-uncompulsory-ma.ngrok-free.dev/api"; // para descargar la apk
+// const API_BASE_URL = "http://10.2.233.202:8000/api";
+const API_BASE_URL = "https://dinkly-uncompulsory-ma.ngrok-free.dev/api"; // para descargar la apk
 
 const api = axios.create({
     baseURL: API_BASE_URL,
@@ -12,7 +12,7 @@ const api = axios.create({
     },
 });
 
-const RutasPublicas = ['/api/login', '/api/registrar', '/api/registrar-recepcionista', '/api/recuperar-password', '/api/verificar-codigo', '/api/restablecer-password'];
+const RutasPublicas = ['/api/login', '/api/registrar', '/api/recuperar-password', '/api/verificar-codigo', '/api/restablecer-password'];
 
 api.interceptors.request.use(
     async (config) => {

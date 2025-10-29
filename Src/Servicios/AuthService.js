@@ -28,12 +28,15 @@ export const loginUser= async(email, password) => {
 };
 
 export const registerUser = async (userData) => {
+  console.log("AuthService: Enviando datos de registro:", userData);
   try {
     const response = await api.post('/registrar', userData); //  endpoint de el backend
-    console.log("Respuesta del servidor (registro):", response.data);
+    console.log("AuthService: Respuesta del servidor (registro):", response.data);
     return { success: true, data: response.data };
   } catch (error) {
-    console.error("Error al registrar usuario:", error.response ? error.response.data : error.message);
+    console.error("AuthService: Error al registrar usuario:", error.response ? error.response.data : error.message);
+    console.error("AuthService: Status del error:", error.response?.status);
+    console.error("AuthService: Headers del error:", error.response?.headers);
 
     return {
       success: false,
@@ -98,7 +101,7 @@ export const verificarCodigo = async (email, codigo) => {
 export const registerRecepcionista = async (recepcionistaData) => {
   try {
     console.log("AuthService: Enviando datos para registro de recepcionista:", recepcionistaData);
-    const response = await api.post('/registrar-recepcionista', {
+    const response = await api.post('/registrar', {
       ...recepcionistaData,
       role: 'Recepcionista'
     });
@@ -108,6 +111,7 @@ export const registerRecepcionista = async (recepcionistaData) => {
     console.error("Error al registrar recepcionista:", error.response ? error.response.data : error.message);
     console.error("AuthService: Status del error:", error.response?.status);
     console.error("AuthService: Headers del error:", error.response?.headers);
+    console.error("AuthService: Error response data completo:", error.response?.data);
     return {
       success: false,
       message: error.response?.data?.message || error.response?.data || "Error de conexión",
@@ -124,6 +128,53 @@ export const restablecerPassword = async (token, password) => {
     return {
       success: false,
       message: error.response ? error.response.data : "Error de conexión",
+    };
+  }
+};
+
+export const getConsultoriosDisponibles = async () => {
+  try {
+    const response = await api.get('/consultorios/disponibles');
+    return { success: true, data: response.data };
+  } catch (error) {
+    console.error("Error al obtener consultorios disponibles:", error.response ? error.response.data : error.message);
+    return {
+      success: false,
+      message: error.response ? error.response.data : "Error de conexión",
+    };
+  }
+};
+
+export const getEspecialidadesDisponibles = async () => {
+  try {
+    const response = await api.get('/especialidades/disponibles');
+    return { success: true, data: response.data };
+  } catch (error) {
+    console.error("Error al obtener especialidades disponibles:", error.response ? error.response.data : error.message);
+    return {
+      success: false,
+      message: error.response ? error.response.data : "Error de conexión",
+    };
+  }
+};
+
+export const registerMedico = async (medicoData) => {
+  try {
+    console.log("AuthService: Enviando datos para registro de médico:", medicoData);
+    const response = await api.post('/registrar', {
+      ...medicoData,
+      role: 'Medico'
+    });
+    console.log("AuthService: Respuesta exitosa del registro:", response.data);
+    return { success: true, data: response.data };
+  } catch (error) {
+    console.error("Error al registrar médico:", error.response ? error.response.data : error.message);
+    console.error("AuthService: Status del error:", error.response?.status);
+    console.error("AuthService: Headers del error:", error.response?.headers);
+    console.error("AuthService: Error response data completo:", error.response?.data);
+    return {
+      success: false,
+      message: error.response?.data?.message || error.response?.data || "Error de conexión",
     };
   }
 };

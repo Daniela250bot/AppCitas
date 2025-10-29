@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { View, Text, TextInput, StyleSheet, Alert, ScrollView } from "react-native";
+import * as Notifications from 'expo-notifications';
 import BottonComponent from "../../componentes/BottoComponent";
 import { registerRecepcionista } from "../../Src/Servicios/AuthService";
 
@@ -7,12 +8,12 @@ export default function RegistroRecepcionista({ navigation }) {
   const [codigoVerificacion, setCodigoVerificacion] = useState("");
   const [showForm, setShowForm] = useState(false);
   const [formData, setFormData] = useState({
-    name: "",
-    apellido: "",
-    turno: "Mañana",
-    telefono: "",
-    email: "",
-    password: "",
+    Nombre: "",
+    Apellido: "",
+    Turno: "Mañana",
+    Telefono: "",
+    Email: "",
+    Password: "",
     confirmPassword: ""
   });
   const [loading, setLoading] = useState(false);
@@ -26,36 +27,57 @@ export default function RegistroRecepcionista({ navigation }) {
   };
 
   const handleRegistro = async () => {
-    if (!formData.name || !formData.apellido || !formData.email || !formData.password) {
+    if (!formData.Nombre || !formData.Apellido || !formData.Email || !formData.Password) {
       Alert.alert("Error", "Por favor, completa todos los campos obligatorios");
       return;
     }
 
-    if (formData.password.length < 8) {
+    if (formData.Password.length < 8) {
       Alert.alert("Error", "La contraseña debe tener al menos 8 caracteres");
       return;
     }
 
-    if (formData.password !== formData.confirmPassword) {
+    if (formData.Password !== formData.confirmPassword) {
       Alert.alert("Error", "Las contraseñas no coinciden");
       return;
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(formData.email)) {
+    if (!emailRegex.test(formData.Email)) {
       Alert.alert("Error", "Por favor, ingresa un correo electrónico válido");
       return;
     }
 
     setLoading(true);
     try {
-      const result = await registerRecepcionista(formData);
+      // Obtener FCM token
+      try {
+        const { status } = await Notifications.requestPermissionsAsync();
+        if (status === 'granted') {
+          const token = await Notifications.getExpoPushTokenAsync();
+          formData.fcm_token = token.data;
+          console.log('FCM token obtenido:', token.data);
+        } else {
+          console.log('Permisos de notificaciones denegados');
+        }
+      } catch (error) {
+        console.error('Error al obtener FCM token:', error);
+      }
+
+      const data = {
+        name: formData.Nombre,
+        apellido: formData.Apellido,
+        telefono: formData.Telefono,
+        email: formData.Email,
+        password: formData.Password,
+        Turno: formData.Turno,
+        fcm_token: formData.fcm_token
+      };
+
+      const result = await registerRecepcionista(data);
       if (result.success) {
-        Alert.alert(
-          "Éxito",
-          "Recepcionista registrado correctamente",
-          [{ text: "OK", onPress: () => navigation.navigate("Login") }]
-        );
+        Alert.alert("Éxito", "Recepcionista registrado correctamente");
+        navigation.navigate("Login");
       } else {
         Alert.alert("Error", result.message || "No se pudo registrar el recepcionista");
       }
@@ -126,30 +148,30 @@ export default function RegistroRecepcionista({ navigation }) {
         <TextInput
           style={styles.input}
           placeholder="Nombre *"
-          value={formData.name}
-          onChangeText={(value) => updateFormData('name', value)}
+          value={formData.Nombre}
+          onChangeText={(value) => updateFormData('Nombre', value)}
         />
 
         <TextInput
           style={styles.input}
           placeholder="Apellido *"
-          value={formData.apellido}
-          onChangeText={(value) => updateFormData('apellido', value)}
+          value={formData.Apellido}
+          onChangeText={(value) => updateFormData('Apellido', value)}
         />
 
         <TextInput
           style={styles.input}
           placeholder="Teléfono"
-          value={formData.telefono}
-          onChangeText={(value) => updateFormData('telefono', value)}
+          value={formData.Telefono}
+          onChangeText={(value) => updateFormData('Telefono', value)}
           keyboardType="phone-pad"
         />
 
         <TextInput
           style={styles.input}
           placeholder="Correo electrónico *"
-          value={formData.email}
-          onChangeText={(value) => updateFormData('email', value)}
+          value={formData.Email}
+          onChangeText={(value) => updateFormData('Email', value)}
           keyboardType="email-address"
           autoCapitalize="none"
         />
@@ -158,8 +180,8 @@ export default function RegistroRecepcionista({ navigation }) {
           style={styles.input}
           placeholder="Contraseña *"
           secureTextEntry
-          value={formData.password}
-          onChangeText={(value) => updateFormData('password', value)}
+          value={formData.Password}
+          onChangeText={(value) => updateFormData('Password', value)}
         />
 
         <TextInput

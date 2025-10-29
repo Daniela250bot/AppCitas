@@ -5,6 +5,8 @@ import { Ionicons } from "@expo/vector-icons";
 import { Calendar } from "react-native-calendars";
 import { crearCita, editarCita, verificarDisponibilidad } from "../../Src/Servicios/CitasService";
 import { useUser } from "../../Src/Contexts/UserContext";
+import * as Notifications from 'expo-notifications';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function EditarCita() {
   const navigation = useNavigation();
@@ -68,6 +70,31 @@ export default function EditarCita() {
       console.error("Error cargando disponibilidad:", error);
     }
   };
+  //Notificacion
+  const programarNotificacion = async () => {
+          const { status } = await Notifications.getPermissionsAsync();
+          const preferencia = await AsyncStorage.getItem('notificaciones_activas');
+          if(status!=='granted' || preferencia !== 'true'){
+              Alert.alert('No tienes permisos para recibir notificaciones');
+              return;
+          }
+  
+          const trigger = new Date(Date.now() +1000); //al instante apartir de ahora 
+  
+          try {
+              await Notifications.scheduleNotificationAsync({
+                  content: {
+                      title: "Citas ",
+                      body: "Se creo la cita exitosamente .  "
+                  },
+                  trigger,
+              });
+              Alert.alert('notificación programada para la creacion de citas'); 
+          } catch (error) {
+              Alert.alert('Error al programar la notificación');
+          }
+      }
+  
 
   const handleDayPress = (day) => {
     setFecha_cita(day.dateString);
@@ -110,6 +137,7 @@ export default function EditarCita() {
 
       if (result.success) {
         Alert.alert("Éxito", esEdicion ? "Cita actualizada correctamente" : "Cita creada exitosamente");
+        await programarNotificacion();
         navigation.goBack();
       } else {
         Alert.alert("Error", result.message || "No se pudo guardar la cita");

@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const ThemeContext = createContext();
 
@@ -32,12 +33,33 @@ export const themes = {
 export const ThemeProvider = ({ children }) => {
   const [theme, setTheme] = useState('light');
 
-  const toggleTheme = (newTheme) => {
-    setTheme(newTheme);
+  useEffect(() => {
+    const loadTheme = async () => {
+      try {
+        const savedTheme = await AsyncStorage.getItem('theme');
+        if (savedTheme) {
+          setTheme(savedTheme);
+        }
+      } catch (error) {
+        console.error('Error loading theme:', error);
+      }
+    };
+    loadTheme();
+  }, []);
+
+  const toggleTheme = async (newTheme) => {
+    try {
+      setTheme(newTheme);
+      await AsyncStorage.setItem('theme', newTheme);
+    } catch (error) {
+      console.error('Error saving theme:', error);
+    }
   };
 
+  const currentTheme = themes[theme] || themes.light;
+
   return (
-    <ThemeContext.Provider value={{ theme: themes[theme], themeName: theme, toggleTheme }}>
+    <ThemeContext.Provider value={{ theme: currentTheme, toggleTheme }}>
       {children}
     </ThemeContext.Provider>
   );

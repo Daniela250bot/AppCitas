@@ -23,52 +23,7 @@ export default function Perfil() {
                 setUsuario(response.data);
             } catch (error) {
                 console.error("Error al cargar el perfil:", error);
-
-                if (error.isAuthError || error.shouldRedirectToLogin) {
-                    console.log("Error de autenticación manejado por el interceptor, redirigiendo al Login");
-                    return;
-                }
-
-                if (error.response) {
-                    Alert.alert(
-                        "Error del servidor",
-                        `Error ${error.response.status}: ${error.response.data?.message || "Ocurrió un error al cargar el perfil"}`,
-                        [
-                            {
-                                text: "OK",
-                                onPress: async () => {
-                                    await AsyncStorage.removeItem("userToken");
-                                },
-                            },
-                        ]
-                    );
-                } else if (error.request) {
-                    Alert.alert(
-                        "Error de conexión",
-                        "No se pudo conectar al servidor, verifica tu conexión a Internet.",
-                        [
-                            {
-                                text: "OK",
-                                onPress: async () => {
-                                    await AsyncStorage.removeItem("userToken");
-                                },
-                            },
-                        ]
-                    );
-                } else {
-                    Alert.alert(
-                        "Error",
-                        "Ocurrió un error inesperado al cargar el perfil.",
-                        [
-                            {
-                                text: "OK",
-                                onPress: async () => {
-                                    await AsyncStorage.removeItem("userToken");
-                                },
-                            },
-                        ]
-                    );
-                }
+                Alert.alert("Error", "Ocurrió un error al cargar el perfil. Intenta nuevamente.");
             } finally {
                 setCargando(false);
             }
@@ -94,7 +49,47 @@ export default function Perfil() {
             quality: 1,
         });
         if (!result.canceled) {
-            setImageUri(result.assets[0].uri);
+            const uri = result.assets[0].uri;
+            setImageUri(uri);
+            await uploadImage(uri);
+        }
+    };
+
+    const uploadImage = async (uri) => {
+        try {
+            const token = await AsyncStorage.getItem("userToken");
+            if (!token) {
+                Alert.alert("Error", "No se encontró el token de usuario");
+                return;
+            }
+
+            const formData = new FormData();
+            const fileName = uri.split('/').pop();
+            const fileType = fileName.split('.').pop();
+
+            formData.append('foto_perfil', {
+                uri: uri,
+                name: fileName,
+                type: `image/${fileType}`,
+            });
+
+            const response = await api.post('/usuario/foto-perfil', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
+
+            if (response.data.success) {
+                Alert.alert("Éxito", "Foto de perfil actualizada correctamente");
+                // Recargar perfil para mostrar la nueva imagen
+                const perfilResponse = await api.get("/me");
+                setUsuario(perfilResponse.data);
+            } else {
+                Alert.alert("Error", response.data.message || "Error al subir la imagen");
+            }
+        } catch (error) {
+            console.error("Error al subir imagen:", error);
+            Alert.alert("Error", "Ocurrió un error al subir la imagen. Intenta nuevamente.");
         }
     };
 
@@ -102,10 +97,12 @@ export default function Perfil() {
         <View style={styles.container}>
             {usuario ? (
                 <>
-                    <Text style={styles.title}>Perfil de usuario</Text>
+                    <Text style={styles.title}>Mi Perfil</Text>
 
                     {/* Imagen de perfil o ícono por defecto */}
-                    {imageUri ? (
+                    {usuario?.user?.foto_perfil ? (
+                        <Image source={{ uri: `https://dinkly-uncompulsory-ma.ngrok-free.dev/storage/fotos-perfil/${usuario.user.foto_perfil}` }} style={styles.profileImage} />
+                    ) : imageUri ? (
                         <Image source={{ uri: imageUri }} style={styles.profileImage} />
                     ) : (
                         <View style={styles.defaultProfile}>
@@ -114,14 +111,22 @@ export default function Perfil() {
                     )}
 
                     <TouchableOpacity style={styles.button} onPress={pickImage}>
-                        <Text style={styles.buttonText}>Seleccionar Imagen</Text>
+                        <Text style={styles.buttonText}>Cambiar foto</Text>
                     </TouchableOpacity>
 
                     {/* Tarjeta con datos */}
                     <View style={styles.card}>
-                        <Text style={styles.label}>Nombre: {usuario.user.name || "No disponible"}</Text>
-                        <Text style={styles.label}>Correo: {usuario.user.email || "No disponible"}</Text>
-                        <Text style={styles.roleLabel}>Rol: {usuario.user.role || "No disponible"}</Text>
+                        <Text style={styles.label}>
+                            <Text style={styles.labelBold}>Nombre: </Text>
+                            {usuario.user.name || "No disponible"}
+                        </Text>
+                        <Text style={styles.label}>
+                            <Text style={styles.labelBold}>Correo: </Text>
+                            {usuario.user.email || "No disponible"}
+                        </Text>
+                        <Text style={styles.roleLabel}>
+                            {usuario.user.role || "Rol no disponible"}
+                        </Text>
                     </View>
                 </>
             ) : (
@@ -146,51 +151,54 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: "#F5F9FF",
+        backgroundColor: "#ECF3FF",
         padding: 20,
     },
     title: {
-        fontSize: 26,
-        fontWeight: "bold",
+        fontSize: 28,
+        fontWeight: "800",
         marginBottom: 20,
-        color: "#0A74DA",
+        color: "#1E3A8A",
         textAlign: "center",
+        letterSpacing: 0.5,
     },
     card: {
         width: "90%",
-        backgroundColor: "#fff",
-        borderRadius: 12,
-        padding: 20,
-        marginTop: 15,
-        shadowColor: "#000",
-        shadowOffset: { width: 0, height: 3 },
+        backgroundColor: "#FFFFFF",
+        borderRadius: 20,
+        padding: 25,
+        marginTop: 20,
+        shadowColor: "#1E3A8A",
+        shadowOffset: { width: 0, height: 4 },
         shadowOpacity: 0.15,
-        shadowRadius: 5,
-        elevation: 4,
+        shadowRadius: 10,
+        elevation: 5,
         alignItems: "center",
     },
     label: {
-        fontSize: 18,
+        fontSize: 17,
+        color: "#374151",
         marginBottom: 8,
-        color: "#333",
         textAlign: "center",
+    },
+    labelBold: {
+        fontWeight: "bold",
+        color: "#1E40AF",
     },
     roleLabel: {
-        fontSize: 18,
-        marginBottom: 8,
-        color: "#0A74DA",
+        fontSize: 16,
+        marginTop: 12,
+        color: "#1E3A8A",
         textAlign: "center",
-        fontWeight: "bold",
-        backgroundColor: "#E8F4FD",
+        fontWeight: "700",
+        backgroundColor: "#DBEAFE",
         paddingVertical: 8,
-        paddingHorizontal: 16,
+        paddingHorizontal: 20,
         borderRadius: 20,
-        marginTop: 10,
-        overflow: "hidden",
     },
     errorText: {
-        color: "red",
-        fontSize: 14,
+        color: "#DC2626",
+        fontSize: 15,
         marginTop: 10,
     },
     overlay: {
@@ -199,7 +207,7 @@ const styles = StyleSheet.create({
         left: 0,
         right: 0,
         bottom: 0,
-        backgroundColor: "rgba(0,0,0,0.5)",
+        backgroundColor: "rgba(0,0,0,0.55)",
         justifyContent: "center",
         alignItems: "center",
     },
@@ -207,46 +215,52 @@ const styles = StyleSheet.create({
         marginTop: 10,
         fontSize: 16,
         color: "#fff",
+        fontWeight: "600",
     },
     profileImage: {
-        width: 120,
-        height: 120,
-        borderRadius: 60,
+        width: 130,
+        height: 130,
+        borderRadius: 65,
         marginBottom: 15,
-        borderWidth: 3,
-        borderColor: "#0A74DA",
+        borderWidth: 4,
+        borderColor: "#3B82F6",
+        shadowColor: "#000",
+        shadowOpacity: 0.2,
+        shadowOffset: { width: 0, height: 2 },
+        shadowRadius: 4,
     },
     defaultProfile: {
-        width: 120,
-        height: 120,
-        borderRadius: 60,
-        backgroundColor: "#E0E0E0",
+        width: 130,
+        height: 130,
+        borderRadius: 65,
+        backgroundColor: "#E5E7EB",
         justifyContent: "center",
         alignItems: "center",
         marginBottom: 15,
         borderWidth: 3,
-        borderColor: "#0A74DA",
+        borderColor: "#3B82F6",
     },
     defaultIcon: {
-        fontSize: 50,
-        color: "#666",
+        fontSize: 55,
+        color: "#6B7280",
     },
     button: {
-        backgroundColor: '#0A74DA',
+        backgroundColor: "#2563EB",
         paddingVertical: 12,
-        paddingHorizontal: 20,
-        borderRadius: 8,
-        marginBottom: 20,
+        paddingHorizontal: 30,
+        borderRadius: 30,
+        marginBottom: 15,
         shadowColor: "#000",
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.2,
         shadowRadius: 4,
-        elevation: 3,
+        elevation: 4,
     },
     buttonText: {
-        color: '#fff',
-        textAlign: 'center',
+        color: "#FFFFFF",
         fontSize: 16,
         fontWeight: "bold",
+        textAlign: "center",
+        letterSpacing: 0.5,
     },
 });

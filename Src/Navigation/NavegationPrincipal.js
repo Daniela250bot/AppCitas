@@ -61,18 +61,6 @@ export default function NavegacionPrincipal() {
           label: "Médicos",
         },
         {
-          name: "Recepcionistas",
-          component: RecepcionistasStack,
-          icon: "clipboard-outline",
-          label: "Recepcionistas",
-        },
-        {
-          name: "Especialidades",
-          component: EspecialidadesStack,
-          icon: "list-outline",
-          label: "Especialidades",
-        },
-        {
           name: "Consultorios",
           component: ConsultoriosStack,
           icon: "business-outline",
@@ -122,6 +110,8 @@ export default function NavegacionPrincipal() {
   };
 
   const tabs = getTabsForRole(user?.role);
+  console.log('NavegationPrincipal: User role:', user?.role);
+  console.log('NavegationPrincipal: Tabs for role:', tabs.map(tab => tab.name));
   return (
     <Tab.Navigator
       screenOptions={{

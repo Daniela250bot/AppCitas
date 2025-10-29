@@ -1,5 +1,6 @@
   import React, { createContext, useContext, useState, useEffect } from 'react';
   import { getUserData } from '../../Src/Servicios/AuthService';
+  import * as Notifications from 'expo-notifications';
 
   export const UserContext = createContext();
 
@@ -21,6 +22,11 @@
           const userData = await getUserData();
           setUser(userData);
           setLoading(false);
+
+          // Actualizar Expo push token si el usuario está logueado
+          if (userData) {
+            await updateExpoToken();
+          }
         } catch (error) {
           console.error('Error loading user:', error);
           setLoading(false);
@@ -31,6 +37,36 @@
 
     const updateUser = (newUser) => {
       setUser(newUser);
+    };
+
+    const updateExpoToken = async () => {
+      try {
+        const token = await Notifications.getExpoPushTokenAsync();
+        console.log('Expo Push Token obtenido en UserContext:', token.data, 'Timestamp:', new Date().toISOString());
+
+        if (user && user.token) {
+          console.log('Enviando Expo push token al backend:', token.data, 'Timestamp:', new Date().toISOString());
+          const response = await fetch('http://10.2.234.63:8000/api/update-fcm-token', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${user.token}`,
+            },
+            body: JSON.stringify({ fcm_token: token.data }),
+          });
+          if (response.ok) {
+            const responseData = await response.json();
+            console.log('Expo push token actualizado en el backend exitosamente:', responseData, 'Timestamp:', new Date().toISOString());
+          } else {
+            const errorText = await response.text();
+            console.error('Error al actualizar Expo push token:', response.status, errorText, 'Timestamp:', new Date().toISOString());
+          }
+        } else {
+          console.log('Usuario no logueado, no se envía Expo push token', 'Timestamp:', new Date().toISOString());
+        }
+      } catch (error) {
+        console.error('Error al actualizar Expo push token:', error);
+      }
     };
 
     const getRole = () => {
@@ -63,6 +99,7 @@
           user,
           loading,
           updateUser,
+          updateExpoToken,
           getRole,
           hasRole,
           isAdmin,

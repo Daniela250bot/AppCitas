@@ -1,4 +1,15 @@
-import { TextInput,Text,View, StyleSheet, Alert, Image, Animated, Easing, Pressable, ActivityIndicator,} from "react-native";
+import {
+  TextInput,
+  Text,
+  View,
+  StyleSheet,
+  Alert,
+  Image,
+  Animated,
+  Easing,
+  Pressable,
+  ActivityIndicator,
+} from "react-native";
 import BottonComponent from "../../componentes/BottoComponent";
 import { useState, useEffect, useRef } from "react";
 import { loginUser } from "../../Src/Servicios/AuthService";
@@ -8,15 +19,13 @@ export default function Login({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const { updateUser, user } = useUser();
+  const { updateUser } = useUser();
 
-  // 🔹 Animaciones
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const slideAnim = useRef(new Animated.Value(60)).current;
   const bounceAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
-    // Efecto de entrada y rebote
     Animated.sequence([
       Animated.parallel([
         Animated.timing(fadeAnim, {
@@ -75,7 +84,6 @@ export default function Login({ navigation }) {
           width: "100%",
         }}
       >
-        {/* Imagen decorativa con rebote */}
         <Animated.Image
           source={{
             uri: "https://cdn-icons-png.flaticon.com/512/3209/3209265.png",
@@ -87,7 +95,7 @@ export default function Login({ navigation }) {
                 {
                   scale: bounceAnim.interpolate({
                     inputRange: [0, 1],
-                    outputRange: [0.8, 1],
+                    outputRange: [0.85, 1],
                   }),
                 },
               ],
@@ -95,11 +103,9 @@ export default function Login({ navigation }) {
           ]}
         />
 
-        {/* Título */}
         <Text style={styles.titulo}>Citas Médicas</Text>
         <Text style={styles.subtitulo}>Inicia sesión para continuar</Text>
 
-        {/* Inputs */}
         <View style={styles.formContainer}>
           <TextInput
             style={styles.input}
@@ -110,7 +116,6 @@ export default function Login({ navigation }) {
             autoCapitalize="none"
             editable={!loading}
           />
-
           <TextInput
             style={styles.input}
             placeholder="🔒 Contraseña"
@@ -121,7 +126,6 @@ export default function Login({ navigation }) {
           />
         </View>
 
-        {/* Botones con efecto de brillo */}
         <Pressable
           onPress={handleLogin}
           disabled={loading}
@@ -136,11 +140,7 @@ export default function Login({ navigation }) {
         </Pressable>
 
         {loading && (
-          <ActivityIndicator
-            size="large"
-            color="#0077b6"
-            style={{ marginTop: 20 }}
-          />
+          <ActivityIndicator size="large" color="#1d4ed8" style={{ marginTop: 20 }} />
         )}
 
         <Pressable
@@ -162,7 +162,7 @@ export default function Login({ navigation }) {
             pressed && styles.botonPressed,
           ]}
         >
-          <Text style={styles.botonTexto}>👨‍💼 Registrar Recepcionista</Text>
+          <Text style={styles.botonTexto}>👨‍💼 Recepcionistas </Text>
         </Pressable>
       </Animated.View>
     </View>
@@ -172,27 +172,34 @@ export default function Login({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#E9F5FF",
+    backgroundColor: "#f0f9ff",
     justifyContent: "center",
     alignItems: "center",
     padding: 25,
   },
   image: {
-    width: 110,
-    height: 110,
-    marginBottom: 20,
-    tintColor: "#0077b6",
+    width: 120,
+    height: 120,
+    marginBottom: 25,
+    tintColor: "#1d4ed8",
+    backgroundColor: "#fff",
+    borderRadius: 60,
+    padding: 15,
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowRadius: 10,
+    elevation: 5,
   },
   titulo: {
-    fontSize: 30,
-    fontWeight: "bold",
-    color: "#023E8A",
-    marginBottom: 5,
+    fontSize: 32,
+    fontWeight: "900",
+    color: "#0f172a",
+    marginBottom: 8,
     textAlign: "center",
   },
   subtitulo: {
     fontSize: 16,
-    color: "#555",
+    color: "#475569",
     marginBottom: 30,
     textAlign: "center",
     fontStyle: "italic",
@@ -200,73 +207,62 @@ const styles = StyleSheet.create({
   formContainer: {
     width: "100%",
     maxWidth: 380,
+    backgroundColor: "#ffffffcc",
+    padding: 20,
+    borderRadius: 18,
+    shadowColor: "#000",
+    shadowOpacity: 0.08,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 8,
+    elevation: 4,
   },
   input: {
     width: "100%",
     padding: 15,
     borderWidth: 1,
-    borderColor: "#b0c4de",
+    borderColor: "#cbd5e1",
     borderRadius: 14,
-    marginBottom: 18,
-    backgroundColor: "#fff",
+    marginBottom: 15,
+    backgroundColor: "#f8fafc",
     fontSize: 16,
-
-    shadowColor: "#000",
-    shadowOpacity: 0.08,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 5,
-    elevation: 2,
   },
   botonLogin: {
-    marginTop: 15,
+    marginTop: 18,
     width: "85%",
-    backgroundColor: "#0077b6",
-    borderRadius: 20,
-    paddingVertical: 14,
+    backgroundColor: "#1d4ed8",
+    borderRadius: 25,
+    paddingVertical: 15,
     alignItems: "center",
-    shadowColor: "#0077b6",
+    shadowColor: "#1d4ed8",
     shadowOpacity: 0.4,
     shadowOffset: { width: 0, height: 3 },
     shadowRadius: 8,
     elevation: 4,
   },
-  botonRegistro: {
-    marginTop: 12,
-    width: "85%",
-    backgroundColor: "#023E8A",
-    borderRadius: 20,
-    paddingVertical: 14,
-    alignItems: "center",
-    shadowColor: "#023E8A",
-    shadowOpacity: 0.3,
-    shadowOffset: { width: 0, height: 3 },
-    shadowRadius: 6,
-    elevation: 4,
-  },
   botonRecuperar: {
-    marginTop: 12,
+    marginTop: 14,
     width: "85%",
-    backgroundColor: "#F59E0B",
-    borderRadius: 20,
-    paddingVertical: 14,
+    backgroundColor: "#f59e0b",
+    borderRadius: 25,
+    paddingVertical: 15,
     alignItems: "center",
-    shadowColor: "#F59E0B",
-    shadowOpacity: 0.3,
+    shadowColor: "#f59e0b",
+    shadowOpacity: 0.4,
     shadowOffset: { width: 0, height: 3 },
-    shadowRadius: 6,
+    shadowRadius: 8,
     elevation: 4,
   },
   botonRegistroRecepcionista: {
-    marginTop: 12,
+    marginTop: 14,
     width: "85%",
-    backgroundColor: "#10B981",
-    borderRadius: 20,
-    paddingVertical: 14,
+    backgroundColor: "#059669",
+    borderRadius: 25,
+    paddingVertical: 15,
     alignItems: "center",
-    shadowColor: "#10B981",
-    shadowOpacity: 0.3,
+    shadowColor: "#059669",
+    shadowOpacity: 0.4,
     shadowOffset: { width: 0, height: 3 },
-    shadowRadius: 6,
+    shadowRadius: 8,
     elevation: 4,
   },
   botonTexto: {
@@ -276,7 +272,7 @@ const styles = StyleSheet.create({
     letterSpacing: 0.5,
   },
   botonPressed: {
-    backgroundColor: "#00b4d8",
     transform: [{ scale: 0.97 }],
+    opacity: 0.9,
   },
 });

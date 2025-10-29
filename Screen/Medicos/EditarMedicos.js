@@ -35,16 +35,16 @@ export default function EditarMedico() {
     setLoading(true);
     try {
       let data = {
-        Nombre,
-        Apellido,
-        Documento,
+        name: Nombre,
+        apellido: Apellido,
+        documento: Documento,
         idEspecialidad,
-        Telefono,
-        Email,
+        telefono: Telefono,
+        email: Email,
         idConsultorio,
       };
       if (Password) {
-        data.Password = Password;
+        data.password = Password;
       }
       let result;
       if (esEdicion) {

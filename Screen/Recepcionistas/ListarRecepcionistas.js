@@ -15,10 +15,11 @@ export default function ListarRecepcionistas() {
     try {
       const result = await listarRecepcionistas();
       if (result.success) {
-        setRecepcionistas(result.data || []);
+        let sortedData = (result.data || []).sort((a, b) => a.Nombre.localeCompare(b.Nombre) || a.id - b.id);
+        setRecepcionistas(sortedData);
       } else {
         Alert.alert("Error", JSON.stringify(result.message));
-     }    
+     }
     } catch (error) {
       Alert.alert("Error", "No se pudieron cargar los recepcionistas");
     } finally {
@@ -75,49 +76,57 @@ export default function ListarRecepcionistas() {
 
   return (
     <View style={{ flex: 1 }}>
-      <FlatList
-        data={recepcionistas}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item }) => (
-          <RecepcionistasCard
-            recepcionista={item}
-            onEdit={() => handleEditar(item)}
-            onDelete={() => handleEliminar(item.id)}
-            onPress={() => navigation.navigate("DetalleRecepcionista", { recepcionista: item })}
-          />
-        )}
-        ListEmptyComponent={<Text style={styles.empty}>No hay Recepcionistas Registrados.</Text>}
-      />
+       <Text style={styles.countText}>Total de Recepcionistas: {recepcionistas.length}</Text>
+       <FlatList
+         data={recepcionistas}
+         keyExtractor={(item) => item.id.toString()}
+         renderItem={({ item }) => (
+           <RecepcionistasCard
+             recepcionista={item}
+             onEdit={() => handleEditar(item)}
+             onDelete={() => handleEliminar(item.id)}
+             onPress={() => navigation.navigate("DetalleRecepcionista", { recepcionista: item })}
+           />
+         )}
+         ListEmptyComponent={<Text style={styles.empty}>No hay Recepcionistas Registrados.</Text>}
+       />
 
-      <TouchableOpacity style={styles.botonCrear} onPress={handleCrear}>
-        <Text style={styles.textBotton}>+ Nuevo Recepcionista</Text>
-      </TouchableOpacity>
-    </View>
-  );
+       <TouchableOpacity style={styles.botonCrear} onPress={handleCrear}>
+         <Text style={styles.textBotton}>+ Nuevo Recepcionista</Text>
+       </TouchableOpacity>
+     </View>
+   );
 }
 
 const styles = StyleSheet.create({
-  centered: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  empty: {
-    textAlign: "center",
-    marginTop: 20,
-    fontSize: 16,
-    color: "#555",
-  },
-  botonCrear: {
-    backgroundColor: "#0a18d6ff",
-    padding: 16,
-    borderRadius: 30,
-    margin: 16,
-    alignItems: "center",
-  },
-  textBotton: {
-    color: "#fff",
-    fontSize: 18,
-    fontWeight: "bold",
-  },
-});
+   centered: {
+     flex: 1,
+     justifyContent: "center",
+     alignItems: "center",
+   },
+   countText: {
+     textAlign: "center",
+     fontSize: 18,
+     fontWeight: "bold",
+     color: "#333",
+     margin: 10,
+   },
+   empty: {
+     textAlign: "center",
+     marginTop: 20,
+     fontSize: 16,
+     color: "#555",
+   },
+   botonCrear: {
+     backgroundColor: "#0a18d6ff",
+     padding: 16,
+     borderRadius: 30,
+     margin: 16,
+     alignItems: "center",
+   },
+   textBotton: {
+     color: "#fff",
+     fontSize: 18,
+     fontWeight: "bold",
+   },
+ });

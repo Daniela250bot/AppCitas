@@ -33,7 +33,10 @@
           ]
         }
       ],
-      "permissions": [],
+      "permissions": [
+        "android.permission.RECEIVE_BOOT_COMPLETED",
+        "android.permission.VIBRATE"
+      ],
       "usesCleartextTraffic": true,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
@@ -51,7 +54,8 @@
       }
     },
     "plugins": [
-      "expo-asset"
+      "expo-asset",
+      "expo-notifications"
     ]
   }
 }

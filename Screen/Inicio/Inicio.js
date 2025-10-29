@@ -76,8 +76,8 @@ export default function Inicio({ navigation }) {
       );
     }
 
-    // Recepcionistas: Admin
-    if (isAdmin()) {
+    // Recepcionistas: Admin, Recepcionista
+    if (isAdmin() || isRecepcionista()) {
       cards.push(
         <CardComponents
           key="recepcionistas"
@@ -95,47 +95,58 @@ export default function Inicio({ navigation }) {
 
   return (
     <ScrollView style={styles.container}>
-      {/* ============ ENCABEZADO CON COLOR CLARO ============ */}
+      {/* ============ ENCABEZADO ============ */}
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>Salud+ Clínica</Text>
-        <Text style={styles.headerSubtitle}>Elige una categoría</Text>
+        <Text style={styles.headerTitle}>🏥 Clinica </Text>
+         <Text style={styles.headerTitle}>  SALUDVITAL</Text>
+        <Text style={styles.headerSubtitle}> Elige una categoría</Text>
       </View>
 
       {/* ============ LISTA DE OPCIONES ============ */}
-      <View style={styles.listContainer}>
-        {getAvailableCards()}
-      </View>
+      <View style={styles.listContainer}>{getAvailableCards()}</View>
     </ScrollView>
   );
 }
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#FFFFFF",
+    backgroundColor: "#EAF0F9",
   },
   header: {
-    paddingTop: 50,   // 🔹 más espacio arriba para que no quede pegado
-    paddingBottom: 20,
+    paddingTop: 60,
+    paddingBottom: 30,
     paddingHorizontal: 16,
-    backgroundColor: "#E0F2FE", // color claro
-    borderBottomWidth: 1,
-    borderBottomColor: "#BAE6FD",
-    alignItems: "center", // centra el contenido
+    backgroundColor: "#FFFFFF",
+    borderBottomWidth: 0,
+    alignItems: "center",
+    borderBottomColor: "#bae6fd",
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowOffset: { width: 0, height: 4 },
+    shadowRadius: 8,
+    elevation: 5,
+    borderBottomLeftRadius: 40,
+    borderBottomRightRadius: 40,
   },
   headerTitle: {
-    fontSize: 24,
-    fontWeight: "bold",
-    color: "#0C4A6E",
+    fontSize: 28,
+    fontWeight: "900",
+    color: "#0f172a",
     textAlign: "center",
+    letterSpacing: 0.5,
   },
   headerSubtitle: {
-    fontSize: 14,
-    color: "#0369A1",
+    fontSize: 15,
+    color: "#1d4ed8",
     marginTop: 6,
     textAlign: "center",
+    fontStyle: "italic",
   },
   listContainer: {
     flexDirection: "column",
-    paddingVertical: 10,
+    paddingVertical: 20,
+    paddingHorizontal: 14,
+    gap: 12,
   },
 });

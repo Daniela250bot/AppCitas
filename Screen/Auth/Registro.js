@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   Image,
 } from "react-native";
+import * as Notifications from 'expo-notifications';
 import BottonComponent from "../../componentes/BottoComponent";
 import { registerUser } from "../../Src/Servicios/AuthService";
 import { useUser } from "../../Src/Contexts/UserContext";
@@ -105,8 +106,24 @@ export default function Registro({ navigation }) {
       role: selectedRole,
     };
 
+    // Obtener FCM token
+    try {
+      const { status } = await Notifications.requestPermissionsAsync();
+      if (status === 'granted') {
+        const token = await Notifications.getExpoPushTokenAsync();
+        userData.fcm_token = token.data;
+        console.log('FCM token obtenido en registro:', token.data);
+      } else {
+        console.log('Permisos de notificaciones denegados en registro');
+      }
+    } catch (error) {
+      console.error('Error al obtener FCM token en registro:', error);
+    }
+
+    console.log('Registro.js: Datos enviados a la API:', userData);
     try {
       const result = await registerUser(userData);
+      console.log('Registro.js: Respuesta de la API:', result);
       if (result.success) {
         Alert.alert("✅ Éxito", "Registro exitoso", [
           { text: "OK", onPress: () => navigation.navigate("Login") },
